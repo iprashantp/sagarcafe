@@ -266,11 +266,25 @@ p {
     z-index: 10;
 }
 
+.logo > span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
 .logo img {
     width: 95px;
     height: 95px;
     object-fit: contain;
     margin: -10px 0;
+}
+
+.veg-icon {
+    width: 2.9rem !important;
+    height: 2.9rem !important;
+    margin: 0;
+    display: inline-block;
+    object-fit: contain;
 }
 
 .nav-menu {
@@ -1458,10 +1472,11 @@ section {
     }
     
     .hero-title {
-        font-size: clamp(2.5rem, 10vw, 4rem) !important;
+        font-size: clamp(3.5rem, 15vw, 6rem) !important;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
+        margin-bottom: 1rem;
     }
     
     .title-small {
@@ -1473,22 +1488,47 @@ section {
     }
     
     .hero-subtitle {
-        font-size: clamp(1rem, 4vw, 1.3rem) !important;
+        font-size: clamp(0.75rem, 2.5vw, 1rem) !important;
+        margin-bottom: 1rem;
     }
     
     /* Status badge mobile - smaller size */
     .status-badge {
-        padding: 6px 12px;
-        font-size: 0.55rem;
-        gap: 4px;
+        padding: 4px 10px;
+        font-size: 0.5rem;
+        gap: 3px;
+        border-radius: 12px;
     }
     
     .status-icon {
-        font-size: 0.55rem;
+        font-size: 0.45rem;
     }
     
     .status-hours {
-        font-size: 0.55rem;
+        font-size: 0.45rem;
+    }
+    
+    /* Make badges smaller on mobile */
+    .badge {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.65rem;
+        gap: 0.3rem;
+        border-width: 1px;
+    }
+    
+    .badge-icon {
+        font-size: 0.85rem;
+    }
+    
+    /* Make View Menu button smaller */
+    .btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+    }
+    
+    .hero-buttons {
+        gap: 0.75rem;
+        margin-top: 1.5rem;
     }
     
     .hero-buttons {
