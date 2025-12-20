@@ -347,7 +347,7 @@ p {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.8), rgba(44, 62, 80, 0.85));
+    background: linear-gradient(135deg, rgba(10, 25, 47, 0.75) 0%, rgba(30, 41, 59, 0.65) 50%, rgba(15, 32, 56, 0.7) 100%);
 }
 
 .hero-content {
@@ -360,20 +360,91 @@ p {
 }
 
 .hero-title {
-    margin-bottom: var(--spacing-sm);
-    background: linear-gradient(to right, #9b59b6, #8e44ad, #b06ab3, #d4af37, #ffd700, #ffed4e);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: 15px;
+    font-size: clamp(3.5rem, 8vw, 6.5rem);
+    font-weight: 700;
+    font-family: 'Playlist Script', cursive;
+    letter-spacing: 3px;
+    background: linear-gradient(135deg, #ffd700 0%, #d4af37 10%, #bb86fc 25%, #87ceeb 40%, #98d8e8 50%, #ffd700 65%, #d4af37 75%, #bb86fc 85%, #87ceeb 100%);
+    background-size: 300% 300%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: none;
-    animation: fadeInUp 1s ease;
+    animation: fadeInUp 1s ease, dynamicGradient 6s ease infinite;
+    filter: drop-shadow(0 0 20px rgba(187, 134, 252, 0.4)) drop-shadow(0 0 30px rgba(135, 206, 235, 0.3));
+    position: relative;
+    display: inline-block;
+    overflow: visible;
+}
+
+.hero-title .title-small {
+    font-size: 0.65em;
+    display: block;
+    margin-bottom: -10px;
+}
+
+.hero-title .title-large {
+    font-size: 1em;
+    display: block;
 }
 
 .hero-subtitle {
-    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
     margin-bottom: var(--spacing-md);
-    font-weight: 300;
-    animation: fadeInUp 1s ease 0.2s both;
+    font-weight: 400;
+    font-style: italic;
+    color: #ffffff;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 175, 55, 0.3);
+    animation: fadeInUp 1s ease 0.2s both, glow 2s ease-in-out infinite alternate;
+    letter-spacing: 1px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.25), rgba(16, 185, 129, 0.25));
+    backdrop-filter: blur(10px);
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    border: 2px solid rgba(34, 197, 94, 0.6);
+    margin-bottom: var(--spacing-md);
+    animation: fadeInUp 1s ease 0.25s both, pulse 2s ease-in-out infinite;
+}
+
+.status-badge.closed {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.25));
+    border: 2px solid rgba(239, 68, 68, 0.6);
+    animation: fadeInUp 1s ease 0.25s both;
+}
+
+.status-icon {
+    font-size: 1rem;
+}
+
+.status-text {
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.status-hours {
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    margin-left: 0.25rem;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+    }
 }
 
 .hero-badges {
@@ -389,18 +460,18 @@ p {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background: rgba(212, 175, 55, 0.2);
+    background: linear-gradient(135deg, rgba(187, 134, 252, 0.25), rgba(135, 206, 235, 0.25));
     backdrop-filter: blur(10px);
     padding: 0.75rem 1.5rem;
     border-radius: 50px;
-    border: 2px solid var(--primary-color);
+    border: 2px solid rgba(187, 134, 252, 0.6);
     transition: all var(--transition-normal);
 }
 
 .badge:hover {
-    background: rgba(212, 175, 55, 0.3);
+    background: linear-gradient(135deg, rgba(187, 134, 252, 0.4), rgba(135, 206, 235, 0.4));
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 10px 25px rgba(187, 134, 252, 0.4);
 }
 
 .badge-icon {
@@ -409,9 +480,10 @@ p {
 
 .badge-text {
     font-weight: 600;
-    color: var(--bg-light);
+    color: #ffffff;
     font-size: 1rem;
     letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .hero-buttons {
@@ -472,6 +544,82 @@ p {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes dynamicGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    25% {
+        background-position: 50% 100%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    75% {
+        background-position: 50% 0%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes dynamicGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    25% {
+        background-position: 50% 100%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    75% {
+        background-position: 50% 0%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 175, 55, 0.3);
+    }
+    to {
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7), 0 0 30px rgba(212, 175, 55, 0.6), 0 0 40px rgba(255, 215, 0, 0.4);
+    }
+}
+
+@keyframes wave {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.wave-text {
+    display: inline-block;
+}
+
+.wave-text span {
+    display: inline-block;
+    animation: wave 2s ease-in-out infinite;
+    animation-delay: calc(0.1s * var(--i));
 }
 
 /* ===================================
@@ -1008,14 +1156,15 @@ section {
 
 .contact-info-item h4 {
     color: var(--secondary-color);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     margin-bottom: 0.25rem;
+    font-weight: 600;
 }
 
 .contact-info-item p,
 .contact-info-item a {
     color: var(--text-light);
-    font-size: 1rem;
+    font-size: 1.1rem;
     text-decoration: none;
 }
 

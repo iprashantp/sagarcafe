@@ -1,4 +1,35 @@
 // ===================================
+// Business Hours Status
+// ===================================
+function updateBusinessStatus() {
+    const statusBadge = document.getElementById('statusBadge');
+    if (!statusBadge) return;
+
+    const now = new Date();
+    const currentHour = now.getHours();
+    
+    // Open from 2:00 PM (14:00) to 11:00 PM (23:00)
+    const isOpen = currentHour >= 14 && currentHour < 23;
+    
+    const statusIcon = statusBadge.querySelector('.status-icon');
+    const statusText = statusBadge.querySelector('.status-text');
+    
+    if (isOpen) {
+        statusBadge.classList.remove('closed');
+        statusIcon.textContent = '🟢';
+        statusText.textContent = 'Open Now';
+    } else {
+        statusBadge.classList.add('closed');
+        statusIcon.textContent = '🔴';
+        statusText.textContent = 'Closed';
+    }
+}
+
+// Update status on page load and every minute
+updateBusinessStatus();
+setInterval(updateBusinessStatus, 60000);
+
+// ===================================
 // Navigation Functionality
 // ===================================
 const navbar = document.getElementById('navbar');
