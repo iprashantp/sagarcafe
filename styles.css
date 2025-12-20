@@ -1520,20 +1520,18 @@ section {
         font-size: 0.85rem;
     }
     
-    /* Make View Menu button smaller */
+    /* Make View Menu button same size as badges */
     .btn {
-        padding: 0.35rem 0.7rem !important;
-        font-size: 0.65rem !important;
+        padding: 0.5rem 1rem !important;
+        font-size: 0.75rem !important;
         min-width: auto !important;
-        max-width: 120px !important;
         white-space: nowrap;
     }
     
     .btn-large {
-        padding: 0.35rem 0.7rem !important;
-        font-size: 0.65rem !important;
+        padding: 0.5rem 1rem !important;
+        font-size: 0.75rem !important;
         min-width: auto !important;
-        max-width: 120px !important;
     }
     
     .hero-buttons {
