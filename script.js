@@ -1,0 +1,629 @@
+// ===================================
+// Navigation Functionality
+// ===================================
+const navbar = document.getElementById('navbar');
+const navMenu = document.getElementById('navMenu');
+const mobileToggle = document.getElementById('mobileToggle');
+const navLinks = document.querySelectorAll('.nav-link');
+
+// Mobile menu toggle
+mobileToggle.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    mobileToggle.classList.toggle('active');
+});
+
+// Close mobile menu when clicking a link
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        mobileToggle.classList.remove('active');
+    });
+});
+
+// Navbar scroll effect
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+    
+    if (currentScroll > 100) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+    
+    lastScroll = currentScroll;
+});
+
+// Active nav link on scroll
+const sections = document.querySelectorAll('section[id]');
+
+function highlightNavLink() {
+    const scrollY = window.pageYOffset;
+    
+    sections.forEach(section => {
+        const sectionHeight = section.offsetHeight;
+        const sectionTop = section.offsetTop - 100;
+        const sectionId = section.getAttribute('id');
+        
+        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${sectionId}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+    });
+}
+
+window.addEventListener('scroll', highlightNavLink);
+
+// ===================================
+// Menu Sharing Functionality
+// ===================================
+const shareButtons = document.querySelectorAll('.share-btn');
+const menuImageUrl = window.location.origin + '/resources/Sagar Cafe Menu (18 x 12 in).png';
+const shareText = 'Check out the delicious menu at Sagar Cafe - 100% Pure Veg!';
+const shareUrl = window.location.href;
+
+shareButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const platform = button.getAttribute('data-platform');
+        
+        switch(platform) {
+            case 'whatsapp':
+                const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+                window.open(whatsappUrl, '_blank');
+                showNotification('Opening WhatsApp...', 'success');
+                break;
+                
+            case 'facebook':
+                const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+                window.open(facebookUrl, '_blank', 'width=600,height=400');
+                showNotification('Opening Facebook...', 'success');
+                break;
+                
+            case 'twitter':
+                const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+                window.open(twitterUrl, '_blank', 'width=600,height=400');
+                showNotification('Opening Twitter...', 'success');
+                break;
+                
+            case 'copy':
+                // Copy link to clipboard
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    showNotification('Link copied to clipboard!', 'success');
+                }).catch(() => {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = shareUrl;
+                    textArea.style.position = 'fixed';
+                    textArea.style.opacity = '0';
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showNotification('Link copied to clipboard!', 'success');
+                    } catch (err) {
+                        showNotification('Failed to copy link', 'error');
+                    }
+                    document.body.removeChild(textArea);
+                });
+                break;
+        }
+    });
+});
+
+// ===================================
+// Image Carousel
+// ===================================
+const carousel = document.querySelector('.carousel');
+const slides = document.querySelectorAll('.carousel-slide');
+const prevBtn = document.querySelector('.carousel-prev');
+const nextBtn = document.querySelector('.carousel-next');
+const indicatorsContainer = document.querySelector('.carousel-indicators');
+
+let currentSlide = 0;
+let autoPlayInterval;
+
+// Create indicators
+slides.forEach((_, index) => {
+    const indicator = document.createElement('div');
+    indicator.className = 'carousel-indicator';
+    if (index === 0) indicator.classList.add('active');
+    indicator.addEventListener('click', () => goToSlide(index));
+    indicatorsContainer.appendChild(indicator);
+});
+
+const indicators = document.querySelectorAll('.carousel-indicator');
+
+function updateSlides() {
+    slides.forEach((slide, index) => {
+        slide.classList.remove('active');
+        if (index === currentSlide) {
+            slide.classList.add('active');
+        }
+    });
+    
+    indicators.forEach((indicator, index) => {
+        indicator.classList.remove('active');
+        if (index === currentSlide) {
+            indicator.classList.add('active');
+        }
+    });
+}
+
+function nextSlide() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    updateSlides();
+}
+
+function prevSlide() {
+    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+    updateSlides();
+}
+
+function goToSlide(index) {
+    currentSlide = index;
+    updateSlides();
+    resetAutoPlay();
+}
+
+function startAutoPlay() {
+    autoPlayInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+}
+
+function stopAutoPlay() {
+    clearInterval(autoPlayInterval);
+}
+
+function resetAutoPlay() {
+    stopAutoPlay();
+    startAutoPlay();
+}
+
+// Event listeners
+prevBtn.addEventListener('click', () => {
+    prevSlide();
+    resetAutoPlay();
+});
+
+nextBtn.addEventListener('click', () => {
+    nextSlide();
+    resetAutoPlay();
+});
+
+// Pause autoplay on hover
+carousel.addEventListener('mouseenter', stopAutoPlay);
+carousel.addEventListener('mouseleave', startAutoPlay);
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+        prevSlide();
+        resetAutoPlay();
+    } else if (e.key === 'ArrowRight') {
+        nextSlide();
+        resetAutoPlay();
+    }
+});
+
+// Touch/swipe support for mobile
+let touchStartX = 0;
+let touchEndX = 0;
+
+carousel.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    stopAutoPlay();
+});
+
+carousel.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+    startAutoPlay();
+});
+
+function handleSwipe() {
+    if (touchEndX < touchStartX - 50) {
+        nextSlide();
+    }
+    if (touchEndX > touchStartX + 50) {
+        prevSlide();
+    }
+}
+
+// Start autoplay
+startAutoPlay();
+
+// ===================================
+// Back to Top Button
+// ===================================
+const backToTop = document.getElementById('backToTop');
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        backToTop.classList.add('visible');
+    } else {
+        backToTop.classList.remove('visible');
+    }
+});
+
+backToTop.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+// ===================================
+// Form Handling
+// ===================================
+
+// Contact Form
+const contactForm = document.getElementById('contactForm');
+
+contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    // Show message that form submission is disabled
+    showNotification('Please contact us directly at +91-9174849029 or visit us in person.', 'info');
+    
+    // Reset form
+    contactForm.reset();
+});
+
+// Newsletter Form
+const newsletterForm = document.querySelector('.newsletter-form');
+
+if (newsletterForm) {
+    newsletterForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const email = newsletterForm.querySelector('input[type="email"]').value;
+        
+        // Show success message
+        showNotification('Thank you for subscribing to our newsletter!', 'success');
+        
+        // Reset form
+        newsletterForm.reset();
+        
+        // In a real application, you would send this to a server
+        console.log('Newsletter subscription:', email);
+    });
+}
+
+// ===================================
+// Notification System
+// ===================================
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotification = document.querySelector('.notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span class="notification-icon">${type === 'success' ? '✓' : 'ℹ'}</span>
+            <p>${message}</p>
+            <button class="notification-close">&times;</button>
+        </div>
+    `;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${type === 'success' ? '#10b981' : '#3b82f6'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+        max-width: 400px;
+    `;
+    
+    // Add to document
+    document.body.appendChild(notification);
+    
+    // Close button functionality
+    const closeBtn = notification.querySelector('.notification-close');
+    closeBtn.addEventListener('click', () => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    });
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 5000);
+}
+
+// Add notification and modal animations
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+    }
+    
+    @keyframes slideUp {
+        from {
+            transform: translateY(50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+    
+    .notification-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .notification-icon {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    
+    .notification-content p {
+        margin: 0;
+        flex: 1;
+        color: white;
+    }
+    
+    .notification-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+    
+    .notification-close:hover {
+        opacity: 1;
+    }
+`;
+document.head.appendChild(style);
+
+// ===================================
+// Smooth Scroll Enhancement
+// ===================================
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        
+        // Skip empty anchors
+        if (href === '#' || !href) return;
+        
+        const target = document.querySelector(href);
+        if (target) {
+            e.preventDefault();
+            
+            const offsetTop = target.offsetTop - 80; // Account for fixed navbar
+            
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    });
+});
+
+// ===================================
+// Scroll Animations
+// ===================================
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.animation = 'fadeInUp 0.8s ease forwards';
+            observer.unobserve(entry.target);
+        }
+    });
+}, observerOptions);
+
+// Observe elements for animation
+const animateElements = document.querySelectorAll('.feature, .gallery-item, .info-card, .about-text, .about-image');
+animateElements.forEach(el => {
+    el.style.opacity = '0';
+    observer.observe(el);
+});
+
+// ===================================
+// Date Input Minimum Date
+// ===================================
+const dateInput = document.getElementById('date');
+if (dateInput) {
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
+}
+
+// ===================================
+// Image Loading Optimization
+// ===================================
+document.addEventListener('DOMContentLoaded', () => {
+    const images = document.querySelectorAll('img[src]');
+    
+    images.forEach(img => {
+        img.addEventListener('load', () => {
+            img.style.opacity = '1';
+        });
+        
+        img.addEventListener('error', () => {
+            console.warn('Failed to load image:', img.src);
+            // You could set a placeholder image here
+        });
+    });
+});
+
+// ===================================
+// Gallery Lightbox (Optional Enhancement)
+// ===================================
+const galleryItems = document.querySelectorAll('.gallery-item');
+
+galleryItems.forEach(item => {
+    item.addEventListener('click', () => {
+        const img = item.querySelector('img');
+        createLightbox(img.src, img.alt);
+    });
+});
+
+function createLightbox(src, alt) {
+    const lightbox = document.createElement('div');
+    lightbox.className = 'lightbox';
+    lightbox.innerHTML = `
+        <div class="lightbox-content">
+            <button class="lightbox-close">&times;</button>
+            <img src="${src}" alt="${alt}">
+        </div>
+    `;
+    
+    lightbox.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        cursor: zoom-out;
+        animation: fadeIn 0.3s ease;
+    `;
+    
+    const content = lightbox.querySelector('.lightbox-content');
+    content.style.cssText = `
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+    `;
+    
+    const img = lightbox.querySelector('img');
+    img.style.cssText = `
+        max-width: 100%;
+        max-height: 90vh;
+        border-radius: 8px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    `;
+    
+    const closeBtn = lightbox.querySelector('.lightbox-close');
+    closeBtn.style.cssText = `
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        background: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    `;
+    
+    closeBtn.addEventListener('mouseover', () => {
+        closeBtn.style.transform = 'scale(1.1)';
+        closeBtn.style.background = '#d4af37';
+    });
+    
+    closeBtn.addEventListener('mouseout', () => {
+        closeBtn.style.transform = 'scale(1)';
+        closeBtn.style.background = 'white';
+    });
+    
+    const closeLightbox = () => {
+        lightbox.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => lightbox.remove(), 300);
+    };
+    
+    closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeLightbox();
+    });
+    
+    lightbox.addEventListener('click', closeLightbox);
+    
+    content.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+    
+    document.body.appendChild(lightbox);
+}
+
+// Add fadeIn/fadeOut animations for lightbox
+const lightboxStyle = document.createElement('style');
+lightboxStyle.textContent = `
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+`;
+document.head.appendChild(lightboxStyle);
+
+// ===================================
+// Console Welcome Message
+// ===================================
+console.log('%c🍽️ Welcome to Sagar Cafe! 🍽️', 'font-size: 20px; font-weight: bold; color: #d4af37;');
+console.log('%cWebsite designed with ❤️ for food lovers', 'font-size: 14px; color: #666;');
