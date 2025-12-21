@@ -412,16 +412,28 @@
                     return sendAuthCode(code);
                     
                 } else {
-                    updateStatus('❌ Authentication Failed', 'error', false);
-                    document.getElementById('message').innerHTML = 
-                        '<strong>❌ Authentication Failed</strong>' +
+                    updateStatus('❌ Cannot Connect to StockCrab', 'error', false);
+                    
+                    let troubleshooting = '<strong>❌ Cannot Connect to StockCrab</strong>' +
                         `Error: ${error.message}<br><br>` +
-                        '<strong>Troubleshooting:</strong><br>' +
-                        '• Verify StockCrab service is running<br>' +
-                        '• Check API URL in configuration<br>' +
-                        '• Ensure CORS is enabled<br>' +
-                        '• Verify network connectivity<br>' +
-                        '• Check browser console for details';
+                        '<strong>Troubleshooting:</strong><br>';
+                    
+                    if (config?.API_BASE_URL?.includes('localhost')) {
+                        troubleshooting += 
+                            '• <strong>Is StockCrab running?</strong> Run: <code>python run.py</code><br>' +
+                            '• Test in terminal: <code>curl http://localhost:8014/api/v1/health</code><br>' +
+                            '• Check Windows Firewall (may block localhost access)<br>' +
+                            '• Try: <code>http://127.0.0.1:8014</code> instead of localhost<br>';
+                    } else {
+                        troubleshooting += 
+                            '• Verify StockCrab is running and accessible<br>' +
+                            '• Check your router/firewall settings<br>' +
+                            '• Verify API_BASE_URL in config is correct<br>';
+                    }
+                    
+                    troubleshooting += '• Open browser console (F12) for detailed logs<br>';
+                    
+                    document.getElementById('message').innerHTML = troubleshooting;
                     
                     showButtons(false, true);
                     showDetails({
@@ -429,6 +441,7 @@
                         'API URL': config?.API_BASE_URL || 'Not configured',
                         'Auth Code': code.substring(0, 40) + '...',
                         'Attempts': retryCount,
+                        'Your Browser': navigator.userAgent,
                         'Timestamp': new Date().toLocaleString()
                     });
                     
@@ -464,17 +477,12 @@
                     throw new Error('Configuration file (fyers-callback-config.js) not loaded');
                 }
                 
-                if (!STOCKWOLF_CONFIG.API_BASE_URL || STOCKWOLF_CONFIG.API_BASE_URL === 'http://localhost:8014') {
-                    updateStatus('⚠️ Configuration Required', 'error', false);
+                if (!STOCKWOLF_CONFIG) {
+                    updateStatus('⚠️ Configuration Error', 'error', false);
                     document.getElementById('message').innerHTML = 
-                        '<strong>⚠️ Configuration Required</strong>' +
-                        'Please update <code>fyers-callback-config.js</code> with your StockCrab API URL.<br>' +
-                        'See documentation for instructions.';
-                    showDetails({
-                        'Issue': 'API_BASE_URL not configured',
-                        'File': 'fyers-callback-config.js',
-                        'Current Value': STOCKWOLF_CONFIG.API_BASE_URL
-                    });
+                        '<strong>⚠️ Configuration File Missing</strong>' +
+                        'Cannot load <code>fyers-callback-config.js</code>.<br>' +
+                        'Make sure both files are uploaded to the same folder.';
                     return;
                 }
                 
