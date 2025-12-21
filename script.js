@@ -7,27 +7,124 @@ function updateBusinessStatus() {
 
     const now = new Date();
     const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const currentSecond = now.getSeconds();
     
-    // Open from 2:00 PM (14:00) to 11:00 PM (23:00)
-    const isOpen = currentHour >= 14 && currentHour < 23;
+    // Open from 1:00 PM (13:00) to 11:00 PM (23:00)
+    const isOpen = currentHour >= 13 && currentHour < 23;
     
     const statusIcon = statusBadge.querySelector('.status-icon');
     const statusText = statusBadge.querySelector('.status-text');
+    const statusHours = statusBadge.querySelector('.status-hours');
     
     if (isOpen) {
         statusBadge.classList.remove('closed');
         statusIcon.textContent = '🟢';
         statusText.textContent = 'Open Now';
+        statusHours.textContent = '1:00 PM - 11:00 PM';
     } else {
         statusBadge.classList.add('closed');
         statusIcon.textContent = '🔴';
         statusText.textContent = 'Closed';
+        
+        // Calculate time until opening (1:00 PM / 13:00)
+        let openingTime = new Date(now);
+        
+        if (currentHour >= 23 || currentHour < 13) {
+            // If after 11 PM or before 1 PM, set opening time to next 1 PM
+            if (currentHour >= 23) {
+                openingTime.setDate(openingTime.getDate() + 1);
+            }
+            openingTime.setHours(13, 0, 0, 0);
+        }
+        
+        // Calculate difference in milliseconds
+        const diff = openingTime - now;
+        const totalSeconds = Math.floor(diff / 1000);
+        const totalMinutes = Math.floor(totalSeconds / 60);
+        const totalHours = Math.floor(totalMinutes / 60);
+        
+        let timeLeftText = '';
+        
+        if (totalHours >= 1) {
+            const hours = totalHours;
+            const minutes = totalMinutes % 60;
+            timeLeftText = hours === 1 
+                ? `Opens in ${hours} hour${minutes > 0 ? ` ${minutes} min` : ''}`
+                : `Opens in ${hours} hours${minutes > 0 ? ` ${minutes} min` : ''}`;
+        } else if (totalMinutes >= 1) {
+            const minutes = totalMinutes;
+            const seconds = totalSeconds % 60;
+            timeLeftText = `Opens in ${minutes} min${seconds > 0 ? ` ${seconds} sec` : ''}`;
+        } else {
+            timeLeftText = `Opens in ${totalSeconds} sec`;
+        }
+        
+        statusHours.textContent = timeLeftText;
     }
 }
 
-// Update status on page load and every minute
+// Update status on page load and every second for countdown
 updateBusinessStatus();
-setInterval(updateBusinessStatus, 60000);
+setInterval(updateBusinessStatus, 1000);
+
+// ===================================
+// Testimonials Data & Rendering
+// ===================================
+const testimonialsData = [
+    {
+        stars: 5,
+        text: "Absolutely amazing food! The taste is authentic and the ambiance is perfect for family gatherings. Highly recommended!",
+        name: "Kapil Sharma",
+        role: "Food Enthusiast",
+        avatar: "K"
+    },
+    {
+        stars: 5,
+        text: "Best cafe in town! The hygiene standards are exceptional and the pure veg menu is extensive. Love coming here!",
+        name: "Amit Patel",
+        role: "Regular Customer",
+        avatar: "A"
+    },
+    {
+        stars: 5,
+        text: "Great experience every time! The staff is friendly, food is delicious, and the prices are very reasonable. A must-visit!",
+        name: "Neelesh Kumar",
+        role: "Local Resident",
+        avatar: "N"
+    },
+    {
+        stars: 5,
+        text: "I'm impressed by the quality and presentation of every dish. The cafe has become my go-to spot for special occasions!",
+        name: "Kriti Singh",
+        role: "Happy Diner",
+        avatar: "K"
+    }
+];
+
+function renderTestimonials() {
+    const testimonialsGrid = document.querySelector('.testimonials-grid');
+    if (!testimonialsGrid) return;
+
+    testimonialsGrid.innerHTML = testimonialsData.map(testimonial => `
+        <div class="testimonial-card">
+            <div class="stars">
+                ${Array(testimonial.stars).fill('<span>⭐</span>').join('')}
+            </div>
+            <p class="testimonial-text">${testimonial.text}</p>
+            <div class="testimonial-author">
+                <div class="author-avatar">${testimonial.avatar}</div>
+                <div class="author-info">
+                    <h4>${testimonial.name}</h4>
+                    <p>${testimonial.role}</p>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Render testimonials on page load
+renderTestimonials();
 
 // ===================================
 // Navigation Functionality

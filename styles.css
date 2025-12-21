@@ -440,15 +440,15 @@ p {
 .status-text {
     font-weight: 700;
     color: #ffffff;
-    font-size: 1rem;
+    font-size: 0.65rem;
     letter-spacing: 0.5px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .status-hours {
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 5.8rem;
     margin-left: 0.25rem;
 }
 
@@ -1504,8 +1504,13 @@ section {
         font-size: 0.45rem;
     }
     
+    .status-text {
+        font-size: 0.65rem;
+    }
+    
     .status-hours {
-        font-size: 0.45rem;
+        font-size: 0.55rem !important;
+        font-weight: 700 !important;
     }
     
     /* Make badges smaller on mobile */
