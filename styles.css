@@ -1363,6 +1363,29 @@ section {
     color: var(--text-lighter);
 }
 
+.visitor-counter {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    pointer-events: none;
+}
+
+.visitor-counter a {
+    font-size: 0.75rem;
+    color: var(--text-lighter);
+    text-decoration: none;
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: default;
+}
+
+.visitor-counter a:hover {
+    opacity: 0.6;
+}
+
 /* ===================================
    Back to Top Button
    =================================== */
