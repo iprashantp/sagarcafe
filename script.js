@@ -790,6 +790,30 @@ if (menuImage && imageZoomModal && zoomedImage) {
 }
 
 // ===================================
+// Party Badge Click Handler
+// ===================================
+const partyBadge = document.getElementById('partyBadge');
+if (partyBadge) {
+    partyBadge.addEventListener('click', function() {
+        const partyCard = document.getElementById('partyCard');
+        const decorationCard = document.getElementById('decorationCard');
+        
+        if (partyCard) {
+            // Scroll to the party card with smooth behavior
+            partyCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Flip both cards after scrolling
+            setTimeout(() => {
+                partyCard.classList.add('flipped');
+                if (decorationCard) {
+                    decorationCard.classList.add('flipped');
+                }
+            }, 800);
+        }
+    });
+}
+
+// ===================================
 // Flip Card Functionality
 // ===================================
 const flipCards = document.querySelectorAll('.flip-card');

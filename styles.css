@@ -737,23 +737,24 @@ section {
 .flip-card {
     perspective: 1000px;
     cursor: pointer;
-    background: transparent;
+    background: var(--bg-light);
     min-height: 200px;
-    max-height: 200px;
+    padding: 1rem;
+    border-radius: 10px;
     position: relative;
-    padding: 0;
+    transition: all var(--transition-normal);
 }
 
 .flip-card:hover {
-    transform: none;
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
 }
 
 .flip-card-inner {
     position: relative;
     width: 100%;
-    height: 200px;
-    min-height: 200px;
-    max-height: 200px;
+    height: 100%;
+    min-height: 180px;
     text-align: center;
     transition: transform 0.6s;
     transform-style: preserve-3d;
@@ -767,25 +768,36 @@ section {
 .flip-card-back {
     position: absolute;
     width: 100%;
-    height: 200px;
-    min-height: 200px;
-    max-height: 200px;
+    height: 100%;
     top: 0;
     left: 0;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    border-radius: 10px;
-    padding: var(--spacing-md);
+    border-radius: 8px;
+    padding: 1rem 0.8rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
 }
 
 .flip-card-front {
-    background: var(--bg-light);
+    background: transparent;
     z-index: 2;
+}
+
+.flip-card-front .feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.flip-card-front h4 {
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+}
+
+.flip-card-front p {
+    font-size: 0.8rem;
 }
 
 .flip-card-back {
@@ -793,25 +805,25 @@ section {
     transform: rotateY(180deg);
     color: var(--bg-dark);
     backdrop-filter: blur(10px);
-    gap: 0.3rem;
-    padding: 1rem 0.75rem;
+    gap: 0.4rem;
+    padding: 0.8rem 0.5rem;
 }
 
 .flip-title {
     font-size: 0.85rem;
     font-weight: 700;
     color: var(--bg-dark);
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.3rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
 .flip-numbers {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.35rem;
     width: 100%;
-    padding: 0 0.5rem;
+    padding: 0;
 }
 
 .flip-contact {
@@ -819,7 +831,7 @@ section {
     font-weight: 600;
     color: var(--bg-dark);
     text-decoration: none;
-    padding: 0.4rem 0.6rem;
+    padding: 0.5rem 0.4rem;
     background: rgba(255, 255, 255, 0.25);
     border-radius: 6px;
     transition: all 0.3s ease;
@@ -1717,14 +1729,15 @@ section {
     /* Hero section mobile fixes */
     .hero {
         min-height: 100vh;
+        background-attachment: scroll !important;
     }
     
     .hero-overlay {
         background: linear-gradient(
             135deg, 
-            rgba(10, 25, 47, 0.85), 
-            rgba(30, 41, 59, 0.75), 
-            rgba(15, 32, 56, 0.8)
+            rgba(10, 25, 47, 0.7), 
+            rgba(30, 41, 59, 0.6), 
+            rgba(15, 32, 56, 0.65)
         ) !important;
     }
     
@@ -1862,6 +1875,8 @@ section {
         font-size: 1rem;
         padding: 0.875rem 1.5rem;
     }
+
+    /* Flip cards use desktop sizing with proper padding */
 }
 
 /* ===================================
