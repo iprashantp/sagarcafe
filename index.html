@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="resources/SagarCafeKitchenLogo - 1.png">
     <link rel="icon" type="image/png" sizes="512x512" href="resources/SagarCafeKitchenLogo - 1.png">
     <link rel="apple-touch-icon" sizes="180x180" href="resources/SagarCafeKitchenLogo - 1.png">
-    <link rel="stylesheet" href="styles.css?v=41">
+    <link rel="stylesheet" href="styles.css?v=50">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -54,6 +54,10 @@
                     <span class="badge-icon">✨</span>
                     <span class="badge-text">Hygiene First</span>
                 </div>
+                <div class="badge">
+                    <span class="badge-icon">🎉</span>
+                    <span class="badge-text">Party Orders & Decorations</span>
+                </div>
             </div>
             <div class="hero-buttons">
                 <a href="#menu" class="btn btn-primary btn-large">View Menu</a>
@@ -93,6 +97,38 @@
                             <h4>Made with Love</h4>
                             <p>Every dish tells a story</p>
                         </div>
+                        <div class="feature flip-card" data-flip="party">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                    <div class="feature-icon">🎉</div>
+                                    <h4>Party Orders</h4>
+                                    <p>Celebrations made special</p>
+                                </div>
+                                <div class="flip-card-back">
+                                    <div class="flip-title">Contact Us</div>
+                                    <div class="flip-numbers">
+                                        <a href="tel:+919174849029" class="flip-contact">+91-9174849029</a>
+                                        <a href="tel:+918305207488" class="flip-contact">+91-8305207488</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature flip-card" data-flip="decoration">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                    <div class="feature-icon">🎈</div>
+                                    <h4>Event Decorations</h4>
+                                    <p>We handle decorations</p>
+                                </div>
+                                <div class="flip-card-back">
+                                    <div class="flip-title">Contact Us</div>
+                                    <div class="flip-numbers">
+                                        <a href="tel:+919174849029" class="flip-contact">+91-9174849029</a>
+                                        <a href="tel:+918305207488" class="flip-contact">+91-8305207488</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="about-image">
@@ -112,7 +148,7 @@
             </div>
             <div class="menu-content">
                 <div class="menu-image-container">
-                    <img src="resources/Sagar Cafe Menu (18 x 12 in).png" alt="Sagar Cafe Full Menu" class="menu-image">
+                    <img src="resources/website_Sagar Cafe Menu (18 x 12 in).jpg" alt="Sagar Cafe Full Menu" class="menu-image" id="menuImage" style="cursor: zoom-in;">
                     <div class="menu-share">
                         <h4>Share Our Menu</h4>
                         <div class="share-buttons">
@@ -173,7 +209,7 @@
                         </div>
                     </div>
                     <div class="carousel-slide">
-                        <img src="resources/Sagar Cafe Menu (18 x 12 in).png" alt="Menu Display">
+                        <img src="resources/website_Sagar Cafe Menu (18 x 12 in).jpg" alt="Menu Display">
                         <div class="carousel-caption">
                             <h3>Our Menu</h3>
                             <p>Delicious dishes crafted with love</p>
@@ -205,6 +241,30 @@
             </div>
             <div class="testimonials-grid">
                 <!-- Testimonials will be loaded dynamically -->
+            </div>
+            <div class="google-reviews-section">
+                <div class="google-reviews-header">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" class="google-logo">
+                    <h3>See What Our Customers Say on Google</h3>
+                </div>
+                <a href="https://www.google.co.in/maps/place/Sagar+Cafe/@23.8607246,78.7987188,20z/data=!4m6!3m5!1s0x3978d1f5a1749e3d:0x89b509bef92db547!8m2!3d23.8606663!4d78.7994795!16s%2Fg%2F11yrfq76n4?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="btn btn-google">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    View All Google Reviews
+                </a>
+                <a href="https://g.page/r/CUe1Lfm-CbWJEAE/review" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="btn btn-primary btn-review">
+                    ⭐ Leave a Google Review
+                </a>
             </div>
         </div>
     </section>
@@ -351,6 +411,12 @@
         </svg>
     </button>
 
-    <script src="script.js?v=4"></script>
+    <!-- Image Zoom Modal -->
+    <div class="image-zoom-modal" id="imageZoomModal">
+        <span class="zoom-close" id="zoomClose">&times;</span>
+        <img class="zoom-content" id="zoomedImage" alt="Menu Zoomed">
+    </div>
+
+    <script src="script.js?v=6"></script>
 </body>
 </html>

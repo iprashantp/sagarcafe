@@ -751,6 +751,56 @@ lightboxStyle.textContent = `
 document.head.appendChild(lightboxStyle);
 
 // ===================================
+// Image Zoom Functionality
+// ===================================
+const menuImage = document.getElementById('menuImage');
+const imageZoomModal = document.getElementById('imageZoomModal');
+const zoomedImage = document.getElementById('zoomedImage');
+const zoomClose = document.getElementById('zoomClose');
+
+if (menuImage && imageZoomModal && zoomedImage) {
+    // Open zoom modal when menu image is clicked
+    menuImage.addEventListener('click', function() {
+        imageZoomModal.classList.add('active');
+        zoomedImage.src = this.src;
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    });
+
+    // Close zoom modal when close button is clicked
+    zoomClose.addEventListener('click', function() {
+        imageZoomModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+
+    // Close zoom modal when clicking outside the image
+    imageZoomModal.addEventListener('click', function(e) {
+        if (e.target === imageZoomModal) {
+            imageZoomModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+
+    // Close zoom modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && imageZoomModal.classList.contains('active')) {
+            imageZoomModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+}
+
+// ===================================
+// Flip Card Functionality
+// ===================================
+const flipCards = document.querySelectorAll('.flip-card');
+
+flipCards.forEach(card => {
+    card.addEventListener('click', function() {
+        this.classList.toggle('flipped');
+    });
+});
+
+// ===================================
 // Console Welcome Message
 // ===================================
 console.log('%c🍽️ Welcome to Sagar Cafe! 🍽️', 'font-size: 20px; font-weight: bold; color: #d4af37;');
