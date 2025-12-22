@@ -808,7 +808,7 @@ if (partyBadge) {
                 if (decorationCard) {
                     decorationCard.classList.add('flipped');
                 }
-            }, 800);
+            }, 1500);
         }
     });
 }
