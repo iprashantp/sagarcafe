@@ -640,8 +640,11 @@ class PDFGenerator {
             type: 'application/pdf'
         });
 
-        // Check if Web Share API is available
-        if (navigator.share) {
+        // Detect iOS devices - iOS Safari doesn't support file sharing
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        
+        // Check if Web Share API is available (but not on iOS for files)
+        if (navigator.share && !isIOS) {
             try {
                 // Try to check if files can be shared
                 const canShareFiles = navigator.canShare ? navigator.canShare({ files: [file] }) : true;
@@ -654,12 +657,6 @@ class PDFGenerator {
                     });
                     return true;
                 } else {
-                    // Try sharing without files (just text and URL)
-                    await navigator.share({
-                        title: `Bill - ${this.billData.billNumber}`,
-                        text: `Bill from Sagar Cafe - Total: ₹${this.billData.total.toFixed(2)}`
-                    });
-                    // Still download the file since we couldn't share it
                     return false;
                 }
             } catch (error) {
@@ -671,6 +668,7 @@ class PDFGenerator {
                 return false;
             }
         } else {
+            // iOS or no share support - return false to trigger download
             return false;
         }
     }
@@ -1102,8 +1100,7 @@ class BillingController {
             
             const shared = await this.currentPDFGenerator.share();
             if (!shared) {
-                // Fallback to download if sharing not supported
-                this.view.showNotification('Sharing not supported. Downloading instead...', 'info');
+                // Fallback to download (iOS or sharing not supported)
                 await this.downloadPDF();
             }
         } catch (error) {
