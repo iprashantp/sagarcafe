@@ -1079,6 +1079,7 @@ body {
         width: 100%;
         max-height: 100vh;
         border-radius: 0;
+        padding-top: env(safe-area-inset-top);
     }
 }
 
@@ -1126,6 +1127,7 @@ body {
 @media (max-width: 480px) {
     .modal-header {
         padding: 0.75rem;
+        padding-top: calc(0.75rem + env(safe-area-inset-top));
     }
 }
 

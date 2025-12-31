@@ -640,15 +640,33 @@ class PDFGenerator {
             type: 'application/pdf'
         });
 
-        if (navigator.share && navigator.canShare({ files: [file] })) {
+        // Check if Web Share API is available
+        if (navigator.share) {
             try {
-                await navigator.share({
-                    title: `Bill - ${this.billData.billNumber}`,
-                    text: `Bill from Sagar Cafe - Total: ₹${this.billData.total.toFixed(2)}`,
-                    files: [file]
-                });
-                return true;
+                // Try to check if files can be shared
+                const canShareFiles = navigator.canShare ? navigator.canShare({ files: [file] }) : true;
+                
+                if (canShareFiles) {
+                    await navigator.share({
+                        title: `Bill - ${this.billData.billNumber}`,
+                        text: `Bill from Sagar Cafe - Total: ₹${this.billData.total.toFixed(2)}`,
+                        files: [file]
+                    });
+                    return true;
+                } else {
+                    // Try sharing without files (just text and URL)
+                    await navigator.share({
+                        title: `Bill - ${this.billData.billNumber}`,
+                        text: `Bill from Sagar Cafe - Total: ₹${this.billData.total.toFixed(2)}`
+                    });
+                    // Still download the file since we couldn't share it
+                    return false;
+                }
             } catch (error) {
+                if (error.name === 'AbortError') {
+                    // User cancelled the share, this is not an error
+                    return true;
+                }
                 console.error('Error sharing:', error);
                 return false;
             }
