@@ -28,6 +28,20 @@
    Reset & Base Styles for Billing Page
    ========================================== */
 
+* {
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.container {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 /* ==========================================
    Buttons (Billing Specific)
    ========================================== */
@@ -107,14 +121,14 @@
    Main Layout
    ========================================== */
 .billing-main {
-    padding: 6rem 0 2rem;
+    padding: 6rem 0 0;
     min-height: calc(100vh - 80px);
     background: var(--bg-dark);
 }
 
 @media (max-width: 1024px) {
     .billing-main {
-        padding: 5rem 0 1rem;
+        padding: 5rem 0 0;
     }
 }
 
@@ -125,6 +139,25 @@
     align-items: start;
 }
 
+/* Mobile Layout - Stacked */
+@media (max-width: 1024px) {
+    .billing-layout {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* Move bill panel to top on mobile */
+    .bill-panel {
+        order: -1;
+    }
+    
+    .inventory-panel {
+        order: 1;
+    }
+}
+
 .inventory-panel,
 .bill-panel {
     background: var(--bg-light);
@@ -132,6 +165,24 @@
     box-shadow: var(--billing-shadow-lg);
     padding: 1.5rem;
     border: 1px solid var(--border-color);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .inventory-panel,
+    .bill-panel {
+        padding: 1rem;
+        border-radius: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inventory-panel,
+    .bill-panel {
+        padding: 0.75rem;
+    }
 }
 
 .bill-panel {
@@ -139,10 +190,25 @@
     top: 100px;
     max-height: calc(100vh - 120px);
     overflow-y: auto;
+    width: 100%;
+    max-width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .bill-panel {
+        position: relative;
+        top: auto;
+        max-height: none;
+        overflow-y: visible;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin-top: 1rem;
+    }
 }
 
 .panel-header {
-    display: flex;
+    display: flex !important;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
@@ -150,13 +216,99 @@
     border-bottom: 2px solid var(--border-color);
 }
 
+@media (max-width: 768px) {
+    .panel-header {
+        flex-direction: row !important;
+        gap: 0.5rem;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+    }
+}
+
 .panel-header h2 {
     font-family: 'Playfair Display', serif;
     font-size: 1.5rem;
     color: var(--text-dark);
-    display: flex;
+    display: flex !important;
     align-items: center;
     gap: 10px;
+    margin: 0;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+@media (max-width: 768px) {
+    .panel-header h2 {
+        font-size: 1.15rem;
+        flex: 1;
+        gap: 6px;
+    }
+    
+    .panel-header h2 i {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .panel-header h2 {
+        font-size: 1.05rem;
+        gap: 4px;
+    }
+    
+    .panel-header h2 i {
+        font-size: 0.95rem;
+    }
+}
+
+/* Header actions - Checkout and Clear buttons */
+.panel-header-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Desktop - make checkout button icon-sized */
+@media (min-width: 1025px) {
+    .panel-header-actions .billing-btn-primary {
+        padding: 0.75rem;
+        min-width: auto;
+    }
+    
+    .panel-header-actions .billing-btn-primary .btn-text {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .panel-header-actions {
+        gap: 0.4rem;
+    }
+    
+    .panel-header-actions .billing-btn-primary,
+    .panel-header-actions .btn-icon {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+    
+    .panel-header-actions .btn-icon {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .panel-header-actions .billing-btn-primary {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.8rem;
+    }
+    
+    .panel-header-actions .billing-btn-primary .btn-text {
+        display: none;
+    }
+    
+    .panel-header-actions .btn-icon {
+        padding: 0.5rem;
+    }
 }
 
 /* ==========================================
@@ -166,6 +318,12 @@
     position: relative;
     width: 100%;
     max-width: 300px;
+}
+
+@media (max-width: 768px) {
+    .search-box {
+        max-width: 100%;
+    }
 }
 
 .search-box i {
@@ -205,21 +363,9 @@
 
 @media (max-width: 768px) {
     .category-filters {
-        flex-wrap: nowrap;
-        overflow-x: auto;
+        flex-wrap: wrap;
+        gap: 8px;
         margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-    }
-    
-    .category-filters::-webkit-scrollbar {
-        height: 4px;
-    }
-    
-    .category-filters::-webkit-scrollbar-thumb {
-        background: var(--primary-color);
-        border-radius: 2px;
     }
 }
 
@@ -236,6 +382,21 @@
     display: flex;
     align-items: center;
     gap: 6px;
+}
+
+@media (max-width: 768px) {
+    .category-btn {
+        padding: 0.5rem 0.9rem;
+        font-size: 0.85rem;
+        gap: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-btn {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
+    }
 }
 
 .category-btn:hover {
@@ -259,6 +420,20 @@
     min-height: 200px;
 }
 
+@media (max-width: 768px) {
+    .inventory-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .inventory-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+}
+
 .inventory-item {
     background: var(--bg-gray);
     border: 2px solid var(--border-color);
@@ -272,6 +447,21 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+    min-height: 140px;
+}
+
+@media (max-width: 768px) {
+    .inventory-item {
+        padding: 0.5rem;
+        min-height: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inventory-item {
+        padding: 0.4rem;
+        min-height: 90px;
+    }
 }
 
 .inventory-item::before {
@@ -302,10 +492,37 @@
     margin-bottom: 0.5rem;
 }
 
+@media (max-width: 768px) {
+    .item-icon {
+        font-size: 1.6rem;
+        margin-bottom: 0.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .item-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.2rem;
+    }
+}
+
 .item-name {
     font-weight: 600;
     color: var(--text-dark);
     margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+    .item-name {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .item-name {
+        font-size: 0.75rem;
+    }
 }
 
 .item-price {
@@ -314,10 +531,35 @@
     font-weight: 600;
 }
 
+@media (max-width: 768px) {
+    .item-price {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .item-price {
+        font-size: 0.9rem;
+    }
+}
+
 .item-category {
     font-size: 0.8rem;
     color: var(--text-light);
     margin-top: 0.25rem;
+}
+
+@media (max-width: 768px) {
+    .item-category {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .item-category {
+        font-size: 0.6rem;
+        display: none;
+    }
 }
 
 /* ==========================================
@@ -325,6 +567,12 @@
    ========================================== */
 .customer-info {
     margin-bottom: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+    .customer-info {
+        display: none;
+    }
 }
 
 .form-group {
@@ -371,20 +619,28 @@
     gap: 1rem;
 }
 
+@media (max-width: 480px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+}
+
 /* ==========================================
    Bill Items
    ========================================== */
 .bill-items {
-    max-height: 300px;
-    overflow-y: auto;
     margin-bottom: 1.5rem;
-    padding-right: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
     .bill-items {
         margin-bottom: 0;
         max-height: 200px;
+        overflow-y: auto;
+        padding-right: 0.25rem;
     }
 }
 
@@ -436,6 +692,13 @@
     transition: var(--transition);
 }
 
+@media (max-width: 1024px) {
+    .bill-item {
+        padding: 0.5rem 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
 .bill-item:hover {
     border-color: var(--primary-color);
     background: var(--bg-light);
@@ -448,10 +711,34 @@
     margin-bottom: 0.75rem;
 }
 
+@media (max-width: 1024px) {
+    .bill-item-header {
+        display: flex;
+        margin-bottom: 0;
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .bill-item-header .bill-item-remove {
+        display: none;
+    }
+}
+
 .bill-item-name {
     font-weight: 600;
     color: var(--text-dark);
     flex: 1;
+}
+
+@media (max-width: 1024px) {
+    .bill-item-name {
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 70px;
+        max-width: 140px;
+    }
 }
 
 .bill-item-remove {
@@ -468,6 +755,12 @@
     justify-content: center;
 }
 
+@media (max-width: 1024px) {
+    .bill-item-remove {
+        display: none;
+    }
+}
+
 .bill-item-remove:hover {
     transform: scale(1.1);
     box-shadow: var(--billing-shadow-md);
@@ -478,6 +771,13 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+    .bill-item-details {
+        gap: 0.5rem;
+        flex-wrap: nowrap;
+    }
 }
 
 .bill-item-quantity {
@@ -560,10 +860,51 @@
     color: var(--text-light);
 }
 
+@media (max-width: 1024px) {
+    .bill-item-edit {
+        display: none;
+    }
+}
+
 .bill-item-edit:hover {
     background: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
+}
+
+/* Mobile one-line layout for bill items */
+@media (max-width: 1024px) {
+    .bill-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .bill-item-details {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    
+    .bill-item-quantity {
+        flex-shrink: 0;
+    }
+    
+    .bill-item-price {
+        flex-shrink: 0;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    
+    .price-per-unit {
+        display: none;
+    }
+    
+    .price-total {
+        font-size: 1rem;
+        white-space: nowrap;
+    }
 }
 
 /* ==========================================
@@ -575,6 +916,8 @@
     padding: 1.25rem;
     margin-bottom: 1.5rem;
     border: 1px solid var(--border-color);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
@@ -603,6 +946,18 @@
     border-bottom: none;
 }
 
+@media (max-width: 768px) {
+    .summary-row {
+        padding: 0.6rem 0.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-row {
+        padding: 0.5rem 0.5rem;
+    }
+}
+
 .summary-row span:first-child {
     color: var(--text-light);
     font-weight: 500;
@@ -626,13 +981,39 @@
     background: var(--bg-dark);
     color: var(--text-dark);
     margin: 0 0.5rem;
+    box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+    .discount-row input {
+        width: 60px;
+        padding: 0.25rem 0.25rem;
+        margin: 0 0.25rem;
+    }
 }
 
 .total-row {
     font-size: 1.3rem;
     padding-top: 1rem;
+    padding-bottom: 0.5rem;
     margin-top: 0.5rem;
     border-top: 2px solid var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .total-row {
+        font-size: 1.2rem;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .total-row {
+        font-size: 1.1rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
 }
 
 .total-row span:first-child {
@@ -649,9 +1030,7 @@
    Bill Actions
    ========================================== */
 .bill-actions {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 1rem;
+    display: none;
 }
 
 /* ==========================================
@@ -687,8 +1066,36 @@
     border: 1px solid var(--border-color);
 }
 
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        max-height: 85vh;
+        border-radius: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        width: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+}
+
 .modal-large {
     max-width: 800px;
+}
+
+@media (max-width: 768px) {
+    .modal-large {
+        max-width: 95%;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-large {
+        max-width: 100%;
+    }
 }
 
 @keyframes modalSlideIn {
@@ -710,9 +1117,34 @@
     border-bottom: 2px solid var(--border-color);
 }
 
+@media (max-width: 768px) {
+    .modal-header {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-header {
+        padding: 0.75rem;
+    }
+}
+
 .modal-header h3 {
     font-family: 'Playfair Display', serif;
     color: var(--text-dark);
+    font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .modal-header h3 {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-header h3 {
+        font-size: 1.1rem;
+    }
 }
 
 .modal-close {
@@ -740,12 +1172,46 @@
     padding: 1.5rem;
 }
 
+@media (max-width: 768px) {
+    .modal-body {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-body {
+        padding: 0.75rem;
+    }
+}
+
 .modal-footer {
     display: flex;
     gap: 1rem;
     padding: 1.5rem;
     border-top: 2px solid var(--border-color);
     justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+    .modal-footer {
+        padding: 1rem;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-footer {
+        padding: 0.75rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .modal-footer .billing-btn-primary,
+    .modal-footer .billing-btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* ==========================================
@@ -772,13 +1238,91 @@
     gap: 0.5rem;
 }
 
+/* Checkout customer inputs */
+.checkout-customer-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.checkout-customer-inputs .form-group {
+    margin-bottom: 0;
+}
+
+.checkout-customer-inputs input {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    background: var(--input-bg);
+}
+
+.checkout-customer-inputs input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Checkout bill info - single row display */
+.checkout-bill-info {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem 0.75rem;
+    background: var(--input-bg);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.bill-info-item {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.bill-info-item strong {
+    color: var(--text-light);
+}
+
+.bill-info-item span {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .checkout-customer-inputs {
+        gap: 0.75rem;
+    }
+    
+    .checkout-bill-info {
+        font-size: 0.85rem;
+        padding: 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .checkout-customer-inputs {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .checkout-customer-inputs input {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+    }
+    
+    .checkout-bill-info {
+        flex-direction: column;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+    }
+}
+
 #checkoutItemsList {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    max-height: 250px;
-    overflow-y: auto;
-    padding-right: 0.5rem;
 }
 
 .checkout-item {
@@ -898,6 +1442,9 @@
     
     #checkoutItemsList {
         max-height: 200px;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+        -webkit-overflow-scrolling: touch;
     }
     
     .checkout-item {
@@ -925,6 +1472,18 @@
     font-family: 'Poppins', sans-serif;
 }
 
+@media (max-width: 768px) {
+    #billPreview {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #billPreview {
+        padding: 1rem;
+    }
+}
+
 .bill-template {
     border: 2px solid #d4af37;
 }
@@ -943,6 +1502,18 @@
     font-size: 2rem;
 }
 
+@media (max-width: 768px) {
+    .bill-header h1 {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .bill-header h1 {
+        font-size: 1.5rem;
+    }
+}
+
 .bill-header .tagline {
     color: #7f8c8d;
     font-size: 0.9rem;
@@ -954,6 +1525,14 @@
     justify-content: space-between;
     margin-bottom: 1.5rem;
     font-size: 0.9rem;
+}
+
+@media (max-width: 480px) {
+    .bill-info {
+        flex-direction: column;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+    }
 }
 
 .bill-info-left,
@@ -982,10 +1561,24 @@
     font-weight: 600;
 }
 
+@media (max-width: 480px) {
+    .bill-table th {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+}
+
 .bill-table td {
     padding: 0.75rem;
     border-bottom: 1px solid #dee2e6;
     color: #2c3e50;
+}
+
+@media (max-width: 480px) {
+    .bill-table td {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
 }
 
 .bill-table tbody tr:hover {
@@ -996,6 +1589,13 @@
     margin-left: auto;
     width: 300px;
     margin-bottom: 1.5rem;
+}
+
+@media (max-width: 480px) {
+    .bill-totals {
+        width: 100%;
+        margin-left: 0;
+    }
 }
 
 .bill-totals-row {
@@ -1042,6 +1642,14 @@
     gap: 10px;
 }
 
+@media (max-width: 768px) {
+    #notificationContainer {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+}
+
 .notification {
     background: var(--bg-light);
     color: var(--text-dark);
@@ -1056,6 +1664,21 @@
     border-left: 4px solid;
     border: 1px solid var(--border-color);
     border-left-width: 4px;
+}
+
+@media (max-width: 768px) {
+    .notification {
+        min-width: auto;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .notification {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
 }
 
 .notification.success {
@@ -1141,5 +1764,252 @@
     }
     to {
         opacity: 1;
+    }
+}
+
+/* ==========================================
+   Mobile-Specific Improvements
+   ========================================== */
+
+/* Larger tap targets for mobile */
+@media (max-width: 768px) {
+    .billing-btn-primary,
+    .billing-btn-secondary,
+    .btn-icon {
+        min-height: 44px;
+        padding: 0.875rem 1.25rem;
+    }
+    
+    .category-btn {
+        min-height: 40px;
+        white-space: nowrap;
+    }
+    
+    .qty-btn {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .bill-item-remove {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* Touch-friendly spacing */
+@media (max-width: 768px) {
+    .bill-item {
+        padding: 0.875rem;
+        margin-bottom: 0.875rem;
+    }
+    
+    .checkout-item {
+        padding: 0.875rem;
+    }
+}
+
+/* Improve scrolling on mobile */
+@media (max-width: 768px) {
+    .bill-items {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Mobile header optimization */
+@media (max-width: 768px) {
+    .billing-main {
+        padding: 5rem 0 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .billing-main {
+        padding: 5.5rem 0 1rem;
+    }
+}
+
+/* Container padding for mobile */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 0.75rem;
+    }
+}
+
+/* Prevent text selection on buttons */
+.billing-btn-primary,
+.billing-btn-secondary,
+.btn-icon,
+.category-btn,
+.qty-btn,
+.bill-item-remove {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Improve form inputs on mobile */
+@media (max-width: 768px) {
+    .form-group input,
+    .search-box input {
+        font-size: 16px; /* Prevents zoom on iOS */
+        min-height: 44px;
+    }
+    
+    .discount-row input {
+        font-size: 16px;
+    }
+}
+
+/* Better modal on small screens */
+@media (max-width: 480px) {
+    .modal {
+        align-items: flex-end;
+    }
+    
+    .modal.active .modal-content {
+        animation: modalSlideUp 0.3s ease;
+    }
+    
+    @keyframes modalSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+/* Improve bill preview table on mobile */
+@media (max-width: 480px) {
+    .bill-table {
+        font-size: 0.85rem;
+    }
+    
+    .bill-table th,
+    .bill-table td {
+        padding: 0.4rem;
+    }
+    
+    /* Hide less important columns on very small screens */
+    .bill-table th:nth-child(3),
+    .bill-table td:nth-child(3) {
+        display: none;
+    }
+}
+
+/* Sticky action buttons on mobile */
+@media (max-width: 768px) {
+    .bill-panel {
+        padding-bottom: 1rem;
+    }
+}
+
+/* Optimize category filters scrolling */
+@media (max-width: 768px) {
+    .category-filters {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+    }
+    
+    .category-filters::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+}
+
+/* Better touch feedback */
+@media (hover: none) and (pointer: coarse) {
+    .inventory-item:active {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    
+    .billing-btn-primary:active,
+    .billing-btn-secondary:active {
+        transform: scale(0.98);
+    }
+    
+    .qty-btn:active {
+        transform: scale(0.9);
+    }
+}
+
+
+
+/* ==========================================
+   Footer Styles
+   ========================================== */
+.footer {
+    background: var(--bg-light);
+    padding: 2rem 0 1rem;
+    border-top: 2px solid var(--border-color);
+    margin-top: 0;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 1.5rem 0 0.5rem;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.footer-bottom p {
+    margin-bottom: 0.75rem;
+}
+
+.visitor-counter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.visitor-counter a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.visitor-counter a:hover {
+    color: var(--accent-color);
+}
+
+@media (max-width: 768px) {
+    .footer {
+        margin-top: 1rem;
+        padding: 1.5rem 0 1rem;
+    }
+    
+    .footer-bottom {
+        padding: 1rem 0 0.5rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        margin-top: 0.75rem;
+        padding: 1rem 0 0.75rem;
+    }
+    
+    .footer-bottom {
+        padding: 0.75rem 0 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .footer-bottom p {
+        margin-bottom: 0.5rem;
+        line-height: 1.5;
     }
 }

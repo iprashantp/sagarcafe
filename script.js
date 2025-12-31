@@ -311,19 +311,25 @@ function resetAutoPlay() {
 }
 
 // Event listeners
-prevBtn.addEventListener('click', () => {
-    prevSlide();
-    resetAutoPlay();
-});
+if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+        prevSlide();
+        resetAutoPlay();
+    });
+}
 
-nextBtn.addEventListener('click', () => {
-    nextSlide();
-    resetAutoPlay();
-});
+if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+        nextSlide();
+        resetAutoPlay();
+    });
+}
 
 // Pause autoplay on hover
-carousel.addEventListener('mouseenter', stopAutoPlay);
-carousel.addEventListener('mouseleave', startAutoPlay);
+if (carousel) {
+    carousel.addEventListener('mouseenter', stopAutoPlay);
+    carousel.addEventListener('mouseleave', startAutoPlay);
+}
 
 // Keyboard navigation
 document.addEventListener('keydown', (e) => {
@@ -340,16 +346,18 @@ document.addEventListener('keydown', (e) => {
 let touchStartX = 0;
 let touchEndX = 0;
 
-carousel.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-    stopAutoPlay();
-});
+if (carousel) {
+    carousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        stopAutoPlay();
+    });
 
-carousel.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-    startAutoPlay();
-});
+    carousel.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+        startAutoPlay();
+    });
+}
 
 function handleSwipe() {
     if (touchEndX < touchStartX - 50) {
