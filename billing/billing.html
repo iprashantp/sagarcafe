@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sagar Cafe - Billing System">
+    <title>Billing System - Sagar Cafe</title>
+    <link rel="icon" type="image/png" sizes="192x192" href="../resources/SagarCafeKitchenLogo.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="../resources/SagarCafeKitchenLogo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../resources/SagarCafeKitchenLogo.png">
+    <link rel="stylesheet" href="../styles.css?v=67">
+    <link rel="stylesheet" href="billing-styles.css?v=29">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="../index.html" class="logo">
+                    <img src="../resources/SagarCafeKitchenLogo.png" alt="Sagar Cafe Logo">
+                    <span>Sagar Cafe <img src="../resources/pure-vegetarian-badge.png" alt="Pure Veg" class="veg-icon"></span>
+                </a>
+                <button class="mobile-toggle" id="mobileToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="../index.html#home" class="nav-link">Home</a></li>
+                    <li><a href="../index.html#about" class="nav-link">About</a></li>
+                    <li><a href="../index.html#menu" class="nav-link">Menu</a></li>
+                    <li><a href="../index.html#gallery" class="nav-link">Gallery</a></li>
+                    <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                    <li><a href="billing.html" class="nav-link active" style="background: linear-gradient(135deg, #d4af37, #e67e22); color: white; padding: 8px 16px; border-radius: 8px;">💳 Billing</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="billing-main">
+        <div class="container">
+            <div class="billing-layout">
+                <!-- Left Panel - Inventory -->
+                <div class="inventory-panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-box"></i> Menu Items</h2>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInventory" placeholder="Search items...">
+                        </div>
+                    </div>
+
+                    <!-- Category Filters -->
+                    <div class="category-filters">
+                        <button class="category-btn active" data-category="all">
+                            <i class="fas fa-th"></i> All
+                        </button>
+                        <button class="category-btn" data-category="beverages">
+                            <i class="fas fa-coffee"></i> Beverages
+                        </button>
+                        <button class="category-btn" data-category="snacks">
+                            <i class="fas fa-cookie"></i> Snacks
+                        </button>
+                        <button class="category-btn" data-category="meals">
+                            <i class="fas fa-pizza-slice"></i> Meals
+                        </button>
+                        <button class="category-btn" data-category="desserts">
+                            <i class="fas fa-ice-cream"></i> Desserts
+                        </button>
+                    </div>
+
+                    <!-- Inventory Grid -->
+                    <div class="inventory-grid" id="inventoryGrid">
+                        <!-- Items will be loaded here by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Right Panel - Bill -->
+                <div class="bill-panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-receipt"></i> Current Bill</h2>
+                        <button class="btn-icon" id="clearBill" title="Clear All">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+
+                    <!-- Customer Info -->
+                    <div class="customer-info">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Customer Name</label>
+                            <input type="text" id="customerName" placeholder="Enter customer name (optional)">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-hashtag"></i> Bill No.</label>
+                                <input type="text" id="billNumber" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-calendar"></i> Date</label>
+                                <input type="text" id="billDate" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bill Items -->
+                    <div class="bill-items" id="billItems">
+                        <div class="empty-bill">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>No items added yet</p>
+                            <small>Select items from the menu to start billing</small>
+                        </div>
+                    </div>
+
+                    <!-- Bill Summary -->
+                    <div class="bill-summary">
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">₹0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Tax (5%):</span>
+                            <span id="tax">₹0.00</span>
+                        </div>
+                        <div class="summary-row discount-row">
+                            <span>
+                                <i class="fas fa-percent"></i> Discount:
+                                <input type="number" id="discountPercent" min="0" max="100" value="0" step="1">%
+                            </span>
+                            <span id="discount">-₹0.00</span>
+                        </div>
+                        <div class="summary-row total-row">
+                            <span>Total:</span>
+                            <span id="total">₹0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="bill-actions">
+                        <button class="billing-btn-secondary btn-block" id="resetBill">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                        <button class="billing-btn-primary btn-block" id="generateBill">
+                            <i class="fas fa-cash-register"></i> Checkout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Price Modal -->
+    <div class="modal" id="editPriceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Item Price</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Item Name</label>
+                    <input type="text" id="editItemName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Original Price</label>
+                    <input type="text" id="editOriginalPrice" readonly>
+                </div>
+                <div class="form-group">
+                    <label>New Price (₹)</label>
+                    <input type="number" id="editNewPrice" min="0" step="0.01" placeholder="Enter new price">
+                </div>
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" id="editQuantity" min="1" value="1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="billing-btn-secondary" id="cancelEdit">Cancel</button>
+                <button class="billing-btn-primary" id="saveEdit">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Review Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3><i class="fas fa-receipt"></i> Checkout - Review Details</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Customer Information -->
+                <div class="checkout-section">
+                    <h4><i class="fas fa-user"></i> Customer Information</h4>
+                    <div class="form-group">
+                        <label>Customer Name</label>
+                        <input type="text" id="checkoutCustomerName" placeholder="Enter customer name (optional)">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Bill Number</label>
+                            <input type="text" id="checkoutBillNumber" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="text" id="checkoutBillDate" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="checkout-section">
+                    <h4><i class="fas fa-shopping-cart"></i> Order Summary</h4>
+                    <div id="checkoutItemsList"></div>
+                </div>
+
+                <!-- Bill Summary -->
+                <div class="checkout-section">
+                    <h4><i class="fas fa-calculator"></i> Bill Summary</h4>
+                    <div class="checkout-summary">
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span id="checkoutSubtotal">₹0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Tax (0%):</span>
+                            <span id="checkoutTax">₹0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Discount:</span>
+                            <div class="discount-input-group">
+                                <input type="number" id="checkoutDiscount" min="0" max="100" value="0" step="0.1">
+                                <span>%</span>
+                                <span class="discount-amount" id="checkoutDiscountAmount">-₹0.00</span>
+                            </div>
+                        </div>
+                        <div class="summary-row total-row">
+                            <span>Total Amount:</span>
+                            <span id="checkoutTotal">₹0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="billing-btn-secondary" id="cancelCheckout">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="billing-btn-primary" id="confirmCheckout">
+                    <i class="fas fa-file-pdf"></i> Generate Bill
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bill Preview Modal -->
+    <div class="modal" id="billPreviewModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Bill Preview</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="billPreview"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="billing-btn-secondary" id="closePreview">Close</button>
+                <button class="billing-btn-primary" id="downloadPDF">
+                    <i class="fas fa-download"></i> Download PDF
+                </button>
+                <button class="billing-btn-primary" id="sharePDF">
+                    <i class="fas fa-share-alt"></i> Share
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <!-- Scripts -->
+    <script src="../script.js?v=8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="billing.js"></script>
+</body>
+</html>

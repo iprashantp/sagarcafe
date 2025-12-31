@@ -36,7 +36,7 @@ Cafe/
 ├── script.js           # JavaScript functionality
 ├── README.md           # This file
 └── resources/          # Images and assets
-    ├── SagarCafeKitchenLogo - 1.png
+    ├── SagarCafeKitchenLogo.png
     ├── Sagar Cafe Menu (18 x 12 in).png
     └── SagarCafeAdPoster (45.5 x 21.5 in).png
 ```
