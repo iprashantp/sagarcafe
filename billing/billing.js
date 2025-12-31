@@ -597,26 +597,28 @@ class PDFGenerator {
         document.body.appendChild(tempContainer);
 
         try {
-            // Generate canvas from HTML
+            // Generate canvas from HTML with optimized settings
             const canvas = await html2canvas(tempContainer.querySelector('.bill-template'), {
-                scale: 2,
+                scale: 1.5,
                 backgroundColor: '#ffffff',
                 logging: false,
                 useCORS: true,
                 allowTaint: true
             });
 
-            const imgData = canvas.toDataURL('image/png');
+            // Convert to JPEG for smaller file size
+            const imgData = canvas.toDataURL('image/jpeg', 0.85);
             const pdf = new jsPDF({
                 orientation: 'portrait',
                 unit: 'mm',
-                format: 'a4'
+                format: 'a4',
+                compress: true
             });
 
             const imgWidth = 190;
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             
-            pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+            pdf.addImage(imgData, 'JPEG', 10, 10, imgWidth, imgHeight, undefined, 'FAST');
             
             return pdf;
         } catch (error) {
