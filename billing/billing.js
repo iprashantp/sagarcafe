@@ -516,53 +516,53 @@ class PDFGenerator {
                     </div>` : ''}
                 </div>
 
-                <div style="padding: 0 0.75rem;">
+                <div style="padding: 0 1rem;">
                 <table class="bill-table" style="width: 100%; border-collapse: collapse; margin-bottom: 0.4rem;">
                     <thead>
                         <tr style="background: linear-gradient(135deg, #d4af37, #e67e22); color: white;">
-                            <th style="padding: 0.35rem; text-align: left; font-weight: 600; font-size: 0.75rem;">Item</th>
-                            <th style="padding: 0.35rem; text-align: center; font-weight: 600; font-size: 0.75rem;">Qty</th>
-                            <th style="padding: 0.35rem; text-align: right; font-weight: 600; font-size: 0.75rem;">Price</th>
-                            <th style="padding: 0.35rem; text-align: right; font-weight: 600; font-size: 0.75rem;">Amount</th>
+                            <th style="padding: 0.5rem 0.4rem; text-align: left; font-weight: 600; font-size: 0.75rem;">Item</th>
+                            <th style="padding: 0.5rem 0.4rem; text-align: center; font-weight: 600; font-size: 0.75rem;">Qty</th>
+                            <th style="padding: 0.5rem 0.4rem; text-align: right; font-weight: 600; font-size: 0.75rem;">Price</th>
+                            <th style="padding: 0.5rem 0.4rem; text-align: right; font-weight: 600; font-size: 0.75rem;">Amount</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${items.map(item => `
                             <tr>
-                                <td style="padding: 0.3rem; border-bottom: 1px solid #dee2e6; color: #2c3e50; font-size: 0.75rem;">
+                                <td style="padding: 0.45rem 0.4rem; border-bottom: 1px solid #dee2e6; color: #2c3e50; font-size: 0.75rem;">
                                     ${item.name}
                                     ${item.isPriceModified ? '<span style="color: rgba(0, 0, 0, 1); font-size: 0.65rem;"> (Modified)</span>' : ''}
                                 </td>
-                                <td style="padding: 0.3rem; border-bottom: 1px solid #dee2e6; text-align: center; color: #2c3e50; font-size: 0.75rem;">${item.quantity}</td>
-                                <td style="padding: 0.3rem; border-bottom: 1px solid #dee2e6; text-align: right; color: #2c3e50; font-size: 0.75rem;">₹${item.price.toFixed(2)}</td>
-                                <td style="padding: 0.3rem; border-bottom: 1px solid #dee2e6; text-align: right; color: #2c3e50; font-size: 0.75rem;">₹${(item.price * item.quantity).toFixed(2)}</td>
+                                <td style="padding: 0.45rem 0.4rem; border-bottom: 1px solid #dee2e6; text-align: center; color: #2c3e50; font-size: 0.75rem;">${item.quantity}</td>
+                                <td style="padding: 0.45rem 0.4rem; border-bottom: 1px solid #dee2e6; text-align: right; color: #2c3e50; font-size: 0.75rem;">₹${item.price.toFixed(2)}</td>
+                                <td style="padding: 0.45rem 0.4rem; border-bottom: 1px solid #dee2e6; text-align: right; color: #2c3e50; font-size: 0.75rem;">₹${(item.price * item.quantity).toFixed(2)}</td>
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
 
                 <div class="bill-totals" style="margin-left: auto; width: 280px; margin-bottom: 0.3rem;">
-                    <div class="bill-totals-row" style="display: flex; justify-content: space-between; padding: 0.3rem 0.5rem; color: #2c3e50; font-size: 0.75rem;">
+                    <div class="bill-totals-row" style="display: flex; justify-content: space-between; padding: 0.4rem 0.6rem; color: #2c3e50; font-size: 0.75rem;">
                         <span>Subtotal:</span>
                         <span>₹${subtotal.toFixed(2)}</span>
                     </div>
-                    <div class="bill-totals-row" style="display: flex; justify-content: space-between; padding: 0.3rem 0.5rem; color: #2c3e50; font-size: 0.75rem;">
+                    <div class="bill-totals-row" style="display: flex; justify-content: space-between; padding: 0.4rem 0.6rem; color: #2c3e50; font-size: 0.75rem;">
                         <span>Tax (${taxPercent}%):</span>
                         <span>₹${tax.toFixed(2)}</span>
                     </div>
                     ${discount > 0 ? `
-                        <div class="bill-totals-row" style="display: flex; justify-content: space-between; padding: 0.3rem 0.5rem; color: #27ae60; font-size: 0.75rem;">
+                        <div class="bill-totals-row" style="display: flex; justify-content: space-between; padding: 0.4rem 0.6rem; color: #27ae60; font-size: 0.75rem;">
                             <span>Discount (${discountPercent}%):</span>
                             <span>-₹${discount.toFixed(2)}</span>
                         </div>
                     ` : ''}
-                    <div class="bill-totals-total" style="border-top: 2px solid #000000ff; margin-top: 0.2rem; padding: 0.4rem 0.5rem 0.2rem 0.5rem; font-size: 1rem; font-weight: 700; color: #000; display: flex; justify-content: space-between;">
+                    <div class="bill-totals-total" style="border-top: 2px solid #000000ff; margin-top: 0.2rem; padding: 0.5rem 0.6rem 0.3rem 0.6rem; font-size: 1rem; font-weight: 700; color: #000; display: flex; justify-content: space-between;">
                         <span>Total:</span>
                         <span>₹${total.toFixed(2)}</span>
                     </div>
                 </div>
 
-                <div class="bill-footer" style="text-align: center; border-top: 2px solid #000000ff; padding: 0.3rem 0.75rem 0.25rem; color: #7f8c8d; font-size: 0.65rem;">
+                <div class="bill-footer" style="text-align: center; border-top: 2px solid #000000ff; padding: 0.4rem 1rem 0.35rem; color: #7f8c8d; font-size: 0.65rem;">
                     <p class="thank-you" style="font-size: 0.8rem; color: #000000ff; font-weight: 600; margin: 0 0 0.15rem 0; line-height: 1.2;">
                         Thank You! Visit Again! 🙏
                     </p>
