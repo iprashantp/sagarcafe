@@ -642,11 +642,31 @@ class PDFGenerator {
             type: 'application/pdf'
         });
 
-        // Detect iOS devices - iOS Safari doesn't support file sharing
+        // Detect iOS devices
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         
-        // Check if Web Share API is available (but not on iOS for files)
-        if (navigator.share && !isIOS) {
+        // For iOS: Open PDF in new tab so user can use native share button
+        if (isIOS) {
+            try {
+                const blobURL = URL.createObjectURL(blob);
+                const newWindow = window.open(blobURL, '_blank');
+                
+                if (newWindow) {
+                    // Clean up the blob URL after a delay
+                    setTimeout(() => URL.revokeObjectURL(blobURL), 60000);
+                    return true;
+                } else {
+                    // Popup blocked, fallback to download
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error opening PDF:', error);
+                return false;
+            }
+        }
+        
+        // Check if Web Share API is available (for Android/Desktop)
+        if (navigator.share) {
             try {
                 // Try to check if files can be shared
                 const canShareFiles = navigator.canShare ? navigator.canShare({ files: [file] }) : true;
@@ -670,7 +690,7 @@ class PDFGenerator {
                 return false;
             }
         } else {
-            // iOS or no share support - return false to trigger download
+            // No share support
             return false;
         }
     }
