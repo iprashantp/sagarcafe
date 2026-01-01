@@ -634,6 +634,26 @@ class PDFGenerator {
         pdf.save(`SagarCafe_Bill_${this.billData.billNumber}.pdf`);
     }
 
+    async print() {
+        const pdf = await this.generatePDF();
+        const blob = pdf.output('blob');
+        const blobURL = URL.createObjectURL(blob);
+        
+        // Open in new window for printing
+        const printWindow = window.open(blobURL, '_blank');
+        
+        if (printWindow) {
+            printWindow.onload = function() {
+                printWindow.print();
+                // Clean up blob URL after printing
+                setTimeout(() => URL.revokeObjectURL(blobURL), 1000);
+            };
+        } else {
+            // Fallback: clean up if window didn't open
+            URL.revokeObjectURL(blobURL);
+        }
+    }
+
     async share() {
         const pdf = await this.generatePDF();
         const blob = pdf.output('blob');
@@ -900,6 +920,10 @@ class BillingController {
             this.sharePDF();
         });
 
+        document.getElementById('printPDF').addEventListener('click', () => {
+            this.printPDF();
+        });
+
         // Close on outside click
         editModal.addEventListener('click', (e) => {
             if (e.target === editModal) this.closeEditModal();
@@ -1128,6 +1152,24 @@ class BillingController {
         } catch (error) {
             console.error('Error sharing PDF:', error);
             this.view.showNotification(`Error sharing PDF: ${error.message}`, 'error');
+        }
+    }
+
+    async printPDF() {
+        try {
+            this.view.showNotification('Preparing to print...', 'info');
+            
+            // Wait a bit to ensure libraries are fully loaded
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            if (!this.currentPDFGenerator) {
+                throw new Error('No bill to print');
+            }
+            
+            await this.currentPDFGenerator.print();
+        } catch (error) {
+            console.error('Error printing PDF:', error);
+            this.view.showNotification(`Error printing PDF: ${error.message}`, 'error');
         }
     }
 }

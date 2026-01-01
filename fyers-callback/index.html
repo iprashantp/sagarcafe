@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fyers Authentication - StockWolf</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .status {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .message.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+
+        .message strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .details {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 12px;
+            color: #666;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .details-item {
+            margin: 8px 0;
+            word-break: break-word;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .details-label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .details-value {
+            color: #666;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #f3f3f3;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-bar.active {
+            display: block;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            animation: progress 3s ease-in-out;
+        }
+
+        @keyframes progress {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #999;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .logo {
+                font-size: 48px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🐺</div>
+        <h1>StockWolf Authentication</h1>
+        <p class="status" id="status">Initializing...</p>
+        
+        <div class="spinner" id="spinner"></div>
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-bar-fill"></div>
+        </div>
+        
+        <div class="message" id="message"></div>
+        <div class="details" id="details" style="display: none;"></div>
+        
+        <div id="buttons" style="display: none;">
+            <button class="btn" id="dashboardBtn" onclick="goToDashboard()">
+                📊 Go to Dashboard
+            </button>
+            <button class="btn btn-secondary" id="retryBtn" onclick="retryAuthentication()">
+                🔄 Retry
+            </button>
+        </div>
+        
+        <div class="footer">
+            Powered by StockWolf 🐺 | Secured with Fyers API
+        </div>
+    </div>
+
+    <script src="fyers-callback-config.js"></script>
+    
+    <script>
+        let authCode = null;
+        let retryCount = 0;
+        let autoRedirectTimer = null;
+
+        function debugLog(...args) {
+            if (STOCKWOLF_CONFIG?.DEBUG_MODE) {
+                console.log('[StockWolf]', ...args);
+            }
+        }
+
+        function getURLParams() {
+            const params = new URLSearchParams(window.location.search);
+            const result = {
+                status: params.get('s'),
+                code: params.get('code'),
+                auth_code: params.get('auth_code'),
+                state: params.get('state'),
+                error: params.get('error'),
+                error_description: params.get('error_description')
+            };
+            debugLog('URL Parameters:', result);
+            return result;
+        }
+
+        function updateStatus(message, type = 'info', showSpinner = false) {
+            const statusEl = document.getElementById('status');
+            const messageEl = document.getElementById('message');
+            const spinner = document.getElementById('spinner');
+            const progressBar = document.getElementById('progressBar');
+            
+            statusEl.textContent = message;
+            
+            spinner.style.display = showSpinner ? 'block' : 'none';
+            progressBar.classList.toggle('active', showSpinner);
+            
+            if (type !== 'loading') {
+                messageEl.className = `message ${type}`;
+                messageEl.style.display = 'block';
+            } else {
+                messageEl.style.display = 'none';
+            }
+        }
+
+        function showDetails(data) {
+            const detailsEl = document.getElementById('details');
+            let html = '';
+            
+            for (const [key, value] of Object.entries(data)) {
+                const displayValue = typeof value === 'string' && value.length > 100 
+                    ? value.substring(0, 100) + '...' 
+                    : value;
+                    
+                html += `
+                    <div class="details-item">
+                        <div class="details-label">${key}:</div>
+                        <div class="details-value">${displayValue}</div>
+                    </div>
+                `;
+            }
+            
+            detailsEl.innerHTML = html;
+            detailsEl.style.display = 'block';
+        }
+
+        function showButtons(dashboardVisible = false, retryVisible = false) {
+            const buttonsEl = document.getElementById('buttons');
+            const dashboardBtn = document.getElementById('dashboardBtn');
+            const retryBtn = document.getElementById('retryBtn');
+            
+            dashboardBtn.style.display = dashboardVisible ? 'inline-block' : 'none';
+            retryBtn.style.display = retryVisible ? 'inline-block' : 'none';
+            buttonsEl.style.display = (dashboardVisible || retryVisible) ? 'block' : 'none';
+        }
+
+        function scheduleAutoRedirect() {
+            if (!STOCKWOLF_CONFIG?.ENABLE_AUTO_REDIRECT) return;
+            if (!STOCKWOLF_CONFIG?.DASHBOARD_URL) return;
+            
+            const delay = STOCKWOLF_CONFIG.AUTO_REDIRECT_DELAY_MS || 3000;
+            debugLog(`Scheduling auto-redirect in ${delay}ms`);
+            
+            autoRedirectTimer = setTimeout(() => {
+                debugLog('Auto-redirecting to dashboard...');
+                window.location.href = STOCKWOLF_CONFIG.DASHBOARD_URL;
+            }, delay);
+        }
+
+        function cancelAutoRedirect() {
+            if (autoRedirectTimer) {
+                clearTimeout(autoRedirectTimer);
+                autoRedirectTimer = null;
+                debugLog('Auto-redirect cancelled');
+            }
+        }
+
+        async function sendAuthCode(code) {
+            const config = STOCKWOLF_CONFIG;
+            const maxRetries = config?.MAX_RETRIES || 3;
+            const retryDelay = config?.RETRY_DELAY_MS || 2000;
+            
+            try {
+                updateStatus('Sending authentication to StockWolf...', 'loading', true);
+                
+                const apiUrl = config?.API_BASE_URL || 'http://localhost:8014';
+                const endpoint = `${apiUrl}/api/v1/auth/fyers/callback?auth_code=${encodeURIComponent(code)}`;
+                
+                debugLog('Sending request to:', endpoint);
+                
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), config?.API_TIMEOUT_MS || 30000);
+                
+                const response = await fetch(endpoint, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                    mode: 'cors',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeout);
+                
+                debugLog('Response status:', response.status);
+                
+                if (response.ok) {
+                    updateStatus('✅ Authentication Successful!', 'success', false);
+                    document.getElementById('message').innerHTML = 
+                        '<strong>✅ Authentication Successful!</strong>' +
+                        'Your Fyers account has been linked to StockWolf.<br>' +
+                        'Tokens have been securely stored.<br>' +
+                        'Redirecting to dashboard...';
+                    
+                    showButtons(true, false);
+                    showDetails({
+                        'Status': 'Authenticated',
+                        'Broker': 'Fyers',
+                        'Timestamp': new Date().toLocaleString(),
+                        'Auth Code': code.substring(0, 40) + '...'
+                    });
+                    
+                    scheduleAutoRedirect();
+                    return true;
+                    
+                } else {
+                    const errorData = await response.json().catch(() => ({}));
+                    const errorMessage = errorData.detail || `HTTP ${response.status}: ${response.statusText}`;
+                    throw new Error(errorMessage);
+                }
+                
+            } catch (error) {
+                debugLog('Authentication error:', error);
+                
+                retryCount++;
+                
+                if (error.name === 'AbortError') {
+                    throw new Error('Request timed out. Please check your internet connection.');
+                }
+                
+                if (retryCount < maxRetries) {
+                    updateStatus(`⚠️ Attempt ${retryCount} failed. Retrying...`, 'error', true);
+                    document.getElementById('message').innerHTML = 
+                        `<strong>⚠️ Attempt ${retryCount}/${maxRetries} failed</strong>` +
+                        `Error: ${error.message}<br>` +
+                        `Retrying in ${retryDelay/1000} seconds...`;
+                    
+                    debugLog(`Retrying in ${retryDelay}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, retryDelay));
+                    return sendAuthCode(code);
+                    
+                } else {
+                    updateStatus('❌ Cannot Connect to StockCrab', 'error', false);
+                    
+                    let troubleshooting = '<strong>❌ Cannot Connect to StockCrab</strong>' +
+                        `Error: ${error.message}<br><br>` +
+                        '<strong>Troubleshooting:</strong><br>';
+                    
+                    if (config?.API_BASE_URL?.includes('localhost')) {
+                        troubleshooting += 
+                            '• <strong>Is StockCrab running?</strong> Run: <code>python run.py</code><br>' +
+                            '• Test in terminal: <code>curl http://localhost:8014/api/v1/health</code><br>' +
+                            '• Check Windows Firewall (may block localhost access)<br>' +
+                            '• Try: <code>http://127.0.0.1:8014</code> instead of localhost<br>';
+                    } else {
+                        troubleshooting += 
+                            '• Verify StockCrab is running and accessible<br>' +
+                            '• Check your router/firewall settings<br>' +
+                            '• Verify API_BASE_URL in config is correct<br>';
+                    }
+                    
+                    troubleshooting += '• Open browser console (F12) for detailed logs<br>';
+                    
+                    document.getElementById('message').innerHTML = troubleshooting;
+                    
+                    showButtons(false, true);
+                    showDetails({
+                        'Error': error.message,
+                        'API URL': config?.API_BASE_URL || 'Not configured',
+                        'Auth Code': code.substring(0, 40) + '...',
+                        'Attempts': retryCount,
+                        'Your Browser': navigator.userAgent,
+                        'Timestamp': new Date().toLocaleString()
+                    });
+                    
+                    return false;
+                }
+            }
+        }
+
+        function retryAuthentication() {
+            debugLog('Manual retry triggered');
+            retryCount = 0;
+            showButtons(false, false);
+            document.getElementById('details').style.display = 'none';
+            sendAuthCode(authCode);
+        }
+
+        function goToDashboard() {
+            const dashboardUrl = STOCKWOLF_CONFIG?.DASHBOARD_URL;
+            if (dashboardUrl) {
+                debugLog('Navigating to dashboard:', dashboardUrl);
+                window.location.href = dashboardUrl;
+            } else {
+                alert('Dashboard URL not configured');
+            }
+        }
+
+        (async function main() {
+            try {
+                debugLog('Fyers Callback Handler Started');
+                debugLog('Configuration:', STOCKWOLF_CONFIG);
+                
+                if (!STOCKWOLF_CONFIG) {
+                    throw new Error('Configuration file (fyers-callback-config.js) not loaded');
+                }
+                
+                if (!STOCKWOLF_CONFIG) {
+                    updateStatus('⚠️ Configuration Error', 'error', false);
+                    document.getElementById('message').innerHTML = 
+                        '<strong>⚠️ Configuration File Missing</strong>' +
+                        'Cannot load <code>fyers-callback-config.js</code>.<br>' +
+                        'Make sure both files are uploaded to the same folder.';
+                    return;
+                }
+                
+                const params = getURLParams();
+                
+                if (params.error) {
+                    updateStatus('❌ Fyers Authentication Error', 'error', false);
+                    document.getElementById('message').innerHTML = 
+                        `<strong>❌ Fyers Error</strong>` +
+                        `${params.error_description || params.error}<br><br>` +
+                        'Please try logging in again.';
+                    showDetails(params);
+                    return;
+                }
+                
+                authCode = params.auth_code;
+                
+                if (!authCode) {
+                    updateStatus('❌ No Authentication Code', 'error', false);
+                    document.getElementById('message').innerHTML = 
+                        '<strong>❌ No Authentication Code Found</strong>' +
+                        'The URL does not contain an auth_code parameter.<br>' +
+                        'This usually means:<br>' +
+                        '• Fyers redirect URI is incorrectly configured<br>' +
+                        '• You accessed this page directly (should come from Fyers)<br><br>' +
+                        'Please try logging in again.';
+                    showDetails(params);
+                    return;
+                }
+                
+                debugLog('Auth code received:', authCode.substring(0, 40) + '...');
+                
+                const success = await sendAuthCode(authCode);
+                
+                if (success) {
+                    debugLog('Authentication completed successfully');
+                }
+                
+            } catch (error) {
+                console.error('Unexpected error:', error);
+                updateStatus('❌ Unexpected Error', 'error', false);
+                document.getElementById('message').innerHTML = 
+                    `<strong>❌ Unexpected Error</strong>${error.message}`;
+                showDetails({
+                    'Error': error.message,
+                    'Stack': error.stack,
+                    'Timestamp': new Date().toLocaleString()
+                });
+            }
+        })();
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                cancelAutoRedirect();
+                debugLog('Page hidden - auto-redirect cancelled');
+            }
+        });
+    </script>
+</body>
+</html>
