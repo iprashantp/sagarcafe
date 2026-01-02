@@ -524,25 +524,25 @@ class PDFGenerator {
                 </div>
 
                 <div style="padding: 0 0.3rem;">
-                <table class="bill-table" style="width: 100%; border-collapse: collapse; margin-bottom: 0.5rem;">
+                <table class="bill-table" style="width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; table-layout: fixed;">
                     <thead>
                         <tr style="border-bottom: 1px dotted #000;">
-                            <th style="padding: 0.4rem 0.3rem; text-align: left; vertical-align: middle; font-weight: 600; font-size: 0.75rem; color: #000;">Item</th>
-                            <th style="padding: 0.4rem 0.3rem; text-align: center; vertical-align: middle; font-weight: 600; font-size: 0.75rem; color: #000;">Qty</th>
-                            <th style="padding: 0.4rem 0.3rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.75rem; color: #000;">Price</th>
-                            <th style="padding: 0.4rem 0.3rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.75rem; color: #000;">Amt</th>
+                            <th style="width: 40%; padding: 0.4rem 0.2rem; text-align: left; vertical-align: middle; font-weight: 600; font-size: 0.7rem; color: #000;">Item</th>
+                            <th style="width: 15%; padding: 0.4rem 0.2rem; text-align: center; vertical-align: middle; font-weight: 600; font-size: 0.7rem; color: #000;">Qty</th>
+                            <th style="width: 22%; padding: 0.4rem 0.2rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.7rem; color: #000;">Price</th>
+                            <th style="width: 23%; padding: 0.4rem 0.2rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.7rem; color: #000;">Amt</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${items.map(item => `
                             <tr>
-                                <td style="padding: 0.35rem 0.3rem; border-bottom: 1px dotted #ddd; color: #000; font-size: 0.75rem;">
+                                <td style="padding: 0.35rem 0.2rem; border-bottom: 1px dotted #ddd; color: #000; font-size: 0.7rem; word-wrap: break-word;">
                                     ${item.name}
-                                    ${item.isPriceModified ? '<span style="color: #666; font-size: 0.65rem;"> (Modified)</span>' : ''}
+                                    ${item.isPriceModified ? '<span style="color: #666; font-size: 0.6rem;"> (Modified)</span>' : ''}
                                 </td>
-                                <td style="padding: 0.35rem 0.3rem; border-bottom: 1px dotted #ddd; text-align: center; color: #000; font-size: 0.75rem;">${item.quantity}</td>
-                                <td style="padding: 0.35rem 0.3rem; border-bottom: 1px dotted #ddd; text-align: right; color: #000; font-size: 0.75rem;">₹${item.price.toFixed(2)}</td>
-                                <td style="padding: 0.35rem 0.3rem; border-bottom: 1px dotted #ddd; text-align: right; color: #000; font-size: 0.75rem;">₹${(item.price * item.quantity).toFixed(2)}</td>
+                                <td style="padding: 0.35rem 0.2rem; border-bottom: 1px dotted #ddd; text-align: center; color: #000; font-size: 0.7rem;">${item.quantity}</td>
+                                <td style="padding: 0.35rem 0.2rem; border-bottom: 1px dotted #ddd; text-align: right; color: #000; font-size: 0.7rem;">₹${item.price.toFixed(2)}</td>
+                                <td style="padding: 0.35rem 0.2rem; border-bottom: 1px dotted #ddd; text-align: right; color: #000; font-size: 0.7rem;">₹${(item.price * item.quantity).toFixed(2)}</td>
                             </tr>
                         `).join('')}
                     </tbody>
