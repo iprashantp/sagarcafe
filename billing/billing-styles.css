@@ -1894,12 +1894,6 @@ body {
     .bill-table td {
         padding: 0.4rem;
     }
-    
-    /* Hide less important columns on very small screens */
-    .bill-table th:nth-child(3),
-    .bill-table td:nth-child(3) {
-        display: none;
-    }
 }
 
 /* Sticky action buttons on mobile */

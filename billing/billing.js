@@ -523,26 +523,26 @@ class PDFGenerator {
                     </div>` : ''}
                 </div>
 
-                <div style="padding: 0 0.3rem;">
-                <table class="bill-table" style="width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; table-layout: fixed;">
+                <div style="padding: 0 0.2rem; overflow-x: visible;">
+                <table class="bill-table" style="width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; table-layout: fixed; min-width: 100%;">
                     <thead>
                         <tr style="border-bottom: 1px dotted #000;">
-                            <th style="width: 40%; padding: 0.4rem 0.2rem; text-align: left; vertical-align: middle; font-weight: 600; font-size: 0.7rem; color: #000;">Item</th>
-                            <th style="width: 15%; padding: 0.4rem 0.2rem; text-align: center; vertical-align: middle; font-weight: 600; font-size: 0.7rem; color: #000;">Qty</th>
-                            <th style="width: 22%; padding: 0.4rem 0.2rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.7rem; color: #000;">Price</th>
-                            <th style="width: 23%; padding: 0.4rem 0.2rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.7rem; color: #000;">Amt</th>
+                            <th style="width: 50%; padding: 0.2rem 0.35rem; text-align: left; vertical-align: middle; font-weight: 600; font-size: 0.52rem; color: #000;">Item</th>
+                            <th style="width: 10%; padding: 0.2rem 0.35rem; text-align: center; vertical-align: middle; font-weight: 600; font-size: 0.52rem; color: #000;">Qty</th>
+                            <th style="width: 18%; padding: 0.2rem 0.35rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.52rem; color: #000;">Price</th>
+                            <th style="width: 22%; padding: 0.2rem 0.35rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.52rem; color: #000;">Amount</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${items.map(item => `
                             <tr>
-                                <td style="padding: 0.35rem 0.2rem; border-bottom: 1px dotted #ddd; color: #000; font-size: 0.7rem; word-wrap: break-word;">
+                                <td style="padding: 0.2rem 0.35rem; border-bottom: 1px dotted #ddd; color: #000; font-size: 0.52rem; word-wrap: break-word; overflow-wrap: break-word;">
                                     ${item.name}
-                                    ${item.isPriceModified ? '<span style="color: #666; font-size: 0.6rem;"> (Modified)</span>' : ''}
+                                    ${item.isPriceModified ? '<span style="color: #666; font-size: 0.42rem;"> (Mod)</span>' : ''}
                                 </td>
-                                <td style="padding: 0.35rem 0.2rem; border-bottom: 1px dotted #ddd; text-align: center; color: #000; font-size: 0.7rem;">${item.quantity}</td>
-                                <td style="padding: 0.35rem 0.2rem; border-bottom: 1px dotted #ddd; text-align: right; color: #000; font-size: 0.7rem;">₹${item.price.toFixed(2)}</td>
-                                <td style="padding: 0.35rem 0.2rem; border-bottom: 1px dotted #ddd; text-align: right; color: #000; font-size: 0.7rem;">₹${(item.price * item.quantity).toFixed(2)}</td>
+                                <td style="padding: 0.2rem 0.35rem; border-bottom: 1px dotted #ddd; text-align: center; color: #000; font-size: 0.52rem;">${item.quantity}</td>
+                                <td style="padding: 0.2rem 0.35rem; border-bottom: 1px dotted #ddd; text-align: right; color: #000; font-size: 0.52rem;">₹${Math.round(item.price)}</td>
+                                <td style="padding: 0.2rem 0.35rem; border-bottom: 1px dotted #ddd; text-align: right; color: #000; font-size: 0.52rem;">₹${Math.round(item.price * item.quantity)}</td>
                             </tr>
                         `).join('')}
                     </tbody>
@@ -600,22 +600,37 @@ class PDFGenerator {
         
         const { jsPDF } = window.jspdf;
         
-        // Create temporary container for thermal paper size (80mm)
+        // Create temporary container with width for thermal paper
         const tempContainer = document.createElement('div');
         tempContainer.style.position = 'absolute';
         tempContainer.style.left = '-9999px';
-        tempContainer.style.width = '302px'; // Match thermal paper width
+        tempContainer.style.width = '302px'; // Thermal paper width
+        tempContainer.style.minWidth = '302px'; // Force minimum width
+        tempContainer.style.maxWidth = '302px'; // Force maximum width
         tempContainer.innerHTML = this.generateHTML();
         document.body.appendChild(tempContainer);
+        
+        // Force layout recalculation
+        const billTemplate = tempContainer.querySelector('.bill-template');
+        billTemplate.style.width = '302px';
+        billTemplate.style.minWidth = '302px';
+        billTemplate.style.maxWidth = '302px';
 
         try {
             // Generate canvas from HTML with optimized settings
-            const canvas = await html2canvas(tempContainer.querySelector('.bill-template'), {
-                scale: 3, // Higher scale for better quality on thermal size
+            // Use large windowWidth to ensure proper rendering on mobile
+            const canvas = await html2canvas(billTemplate, {
+                scale: 3, // Higher scale for better quality
                 backgroundColor: '#ffffff',
                 logging: false,
                 useCORS: true,
-                allowTaint: true
+                allowTaint: true,
+                width: 302,
+                windowWidth: 1024, // Large window width to prevent mobile viewport issues
+                x: 0,
+                y: 0,
+                scrollX: 0,
+                scrollY: 0
             });
 
             // Convert to JPEG for smaller file size
