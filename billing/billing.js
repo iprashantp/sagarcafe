@@ -79,6 +79,12 @@ const INVENTORY_DATA = {
         { "name": "Steamed Momos", "price": 50, "icon": "🥟" },
         { "name": "Fried Momos", "price": 60, "icon": "🥟" },
         { "name": "Paneer Momos", "price": 70, "icon": "🥟" }
+    ],
+    "water": [
+        { "name": "water bottle 250ml", "price": 5, "icon": "🥛" },
+        { "name": "water bottle 500ml", "price": 10, "icon": "🥛" },
+        { "name": "water bottle 1L", "price": 20, "icon": "🥛" },
+        { "name": "water bottle 2L", "price": 35, "icon": "🥛" }
     ]
 };
 
@@ -330,7 +336,8 @@ class BillingView {
             'sandwich': 'fa-sandwich',
             'pasta': 'fa-spaghetti-monster-flying',
             'coffee': 'fa-mug-hot',
-            'momos': 'fa-dumpling'
+            'momos': 'fa-dumpling',
+            'water': 'fa-water'
         };
 
         // Generate category buttons
@@ -573,8 +580,8 @@ class PDFGenerator {
                     <p style="margin: 0.2rem 0; font-size: 0.55rem; line-height: 1.3;">
                         🌐 www.sagarcafe.in
                     </p>
-                    <p style="margin: 0.25rem 0 0.2rem 0; padding-top: 0.2rem; font-style: italic; color: #95a5a6; font-size: 0.55rem; line-height: 1.4;">
-                        This is a computer-generated bill
+                    <p style="margin: 0.2rem 0; font-size: 0.55rem; line-height: 1.3;">
+                        fssai license no.: 21426470000031
                     </p>
                 </div>
                 </div>
