@@ -1,0 +1,13 @@
+{
+  "name": "sagarcafe",
+  "version": "1.0.0",
+  "description": "Sagar Cafe Billing System",
+  "scripts": {
+    "build": "npm run minify:billing && npm run minify:main",
+    "minify:billing": "npx terser billing/billing.js -c -m -o billing/billing.min.js --source-map",
+    "minify:main": "npx terser script.js -c -m -o script.min.js --source-map"
+  },
+  "keywords": ["billing", "cafe", "restaurant"],
+  "author": "",
+  "license": "ISC"
+}
