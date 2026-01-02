@@ -495,7 +495,7 @@ class PDFGenerator {
     " alt="Sagar Cafe Logo" style="width: 60px; height: 60px; display: block;">
                         </div>
                         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-                            <h1 style="font-family: 'Playfair Display', serif; color: #2c3e50; margin: 0 0 0.1rem 0; font-size: 1.3rem; line-height: 1.1;">
+                            <h1 style="font-family: 'Playfair Display', serif; color: #2c3e50; margin: 0 0 0.25rem 0; font-size: 1.3rem; line-height: 1.1;">
                                 Sagar Cafe
                             </h1>
                             <p class="tagline" style="color: #7f8c8d; font-size: 0.65rem; font-style: italic; margin: 0; line-height: 1.2;">
@@ -509,40 +509,39 @@ class PDFGenerator {
                     </div>
                 </div>
 
-                <div class="bill-info" style="margin-bottom: 0.4rem; font-size: 0.65rem; padding: 0.3rem 0.3rem 0.2rem 0.3rem; color: #2c3e50;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.15rem;">
-                        <span style="color: #2c3e50;"><strong>Bill No.:</strong> <span style="font-weight: 600; color: #000;">${billNumber}</span></span>
-                        <span style="color: #2c3e50;"><strong>Date:</strong> <span style="font-weight: 600; color: #000;">${new Date(date).toLocaleDateString('en-IN')}</span></span>
+                <div class="bill-info" style="display: block !important; margin-bottom: 0.4rem; font-size: 0.6rem; padding: 0.3rem 0.3rem 0.2rem 0.3rem; color: #2c3e50;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.15rem; gap: 0.3rem; flex-wrap: nowrap;">
+                        <span style="color: #000; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><strong>Customer:</strong> ${customerName}</span>
+                        <span style="color: #000; flex-shrink: 0; white-space: nowrap; text-align: right;"><strong>Bill No.:</strong> ${billNumber}</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.15rem;">
-                        <span style="color: #2c3e50;"><strong>Customer:</strong> <span style="font-weight: 600; color: #000;">${customerName}</span></span>
-                        <span style="color: #2c3e50;"><strong>Time:</strong> <span style="font-weight: 600; color: #000;">${new Date(date).toLocaleTimeString('en-IN', {hour: '2-digit', minute: '2-digit'})}</span></span>
+                    <div style="display: block; margin-bottom: 0.15rem; clear: both;">
+                        <span style="color: #000;"><strong>Datetime:</strong> ${new Date(date).toLocaleDateString('en-IN', {day: 'numeric', month: 'short', year: 'numeric'})} | ${new Date(date).toLocaleTimeString('en-IN', {hour: '2-digit', minute: '2-digit', hour12: true})}</span>
                     </div>
-                    ${customerContact ? `<div style="margin-bottom: 0.15rem;">
-                        <span style="color: #2c3e50;"><strong>Contact:</strong> <span style="font-weight: 600; color: #000;">${customerContact}</span></span>
+                    ${customerContact ? `<div style="display: block; margin-bottom: 0.15rem; clear: both;">
+                        <span style="color: #000;"><strong>Contact:</strong> ${customerContact}</span>
                     </div>` : ''}
                 </div>
 
                 <div style="padding: 0 0.2rem; overflow-x: visible;">
                 <table class="bill-table" style="width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; table-layout: fixed; min-width: 100%;">
                     <thead>
-                        <tr style="border-bottom: 1px dotted #000;">
-                            <th style="width: 50%; padding: 0.2rem 0.35rem; text-align: left; vertical-align: middle; font-weight: 600; font-size: 0.52rem; color: #000;">Item</th>
-                            <th style="width: 10%; padding: 0.2rem 0.35rem; text-align: center; vertical-align: middle; font-weight: 600; font-size: 0.52rem; color: #000;">Qty</th>
-                            <th style="width: 18%; padding: 0.2rem 0.35rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.52rem; color: #000;">Price</th>
-                            <th style="width: 22%; padding: 0.2rem 0.35rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.52rem; color: #000;">Amount</th>
+                        <tr style="border-bottom: 1px dotted #000; height: 1.2rem;">
+                            <th style="width: 50%; padding: 0.3rem 0.35rem; text-align: left; vertical-align: middle; font-weight: 600; font-size: 0.6rem; color: #000;">Items</th>
+                            <th style="width: 10%; padding: 0.3rem 0.35rem; text-align: center; vertical-align: middle; font-weight: 600; font-size: 0.6rem; color: #000;">Qty</th>
+                            <th style="width: 18%; padding: 0.3rem 0.35rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.6rem; color: #000;">Price</th>
+                            <th style="width: 22%; padding: 0.3rem 0.35rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.6rem; color: #000;">Amount</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${items.map(item => `
                             <tr>
-                                <td style="padding: 0.2rem 0.35rem; border-bottom: 1px dotted #ddd; color: #000; font-size: 0.52rem; word-wrap: break-word; overflow-wrap: break-word;">
+                                <td style="padding: 0.2rem 0.35rem; border-bottom: 1px dotted #ddd; color: #000; font-size: 0.6rem; word-wrap: break-word; overflow-wrap: break-word;">
                                     ${item.name}
-                                    ${item.isPriceModified ? '<span style="color: #666; font-size: 0.42rem;"> (Mod)</span>' : ''}
+                                    ${item.isPriceModified ? '<span style="color: #666; font-size: 0.48rem;"> (Mod)</span>' : ''}
                                 </td>
-                                <td style="padding: 0.2rem 0.35rem; border-bottom: 1px dotted #ddd; text-align: center; color: #000; font-size: 0.52rem;">${item.quantity}</td>
-                                <td style="padding: 0.2rem 0.35rem; border-bottom: 1px dotted #ddd; text-align: right; color: #000; font-size: 0.52rem;">₹${Math.round(item.price)}</td>
-                                <td style="padding: 0.2rem 0.35rem; border-bottom: 1px dotted #ddd; text-align: right; color: #000; font-size: 0.52rem;">₹${Math.round(item.price * item.quantity)}</td>
+                                <td style="padding: 0.2rem 0.35rem; border-bottom: 1px dotted #ddd; text-align: center; color: #000; font-size: 0.6rem;">${item.quantity}</td>
+                                <td style="padding: 0.2rem 0.35rem; border-bottom: 1px dotted #ddd; text-align: right; color: #000; font-size: 0.6rem;">₹${Math.round(item.price)}</td>
+                                <td style="padding: 0.2rem 0.35rem; border-bottom: 1px dotted #ddd; text-align: right; color: #000; font-size: 0.6rem;">₹${Math.round(item.price * item.quantity)}</td>
                             </tr>
                         `).join('')}
                     </tbody>
@@ -574,8 +573,8 @@ class PDFGenerator {
                 </div>
 
                 <div class="bill-footer" style="text-align: center; border-top: 1px dotted #000; padding: 0.7rem 0.3rem 0.6rem 0.3rem; color: #666; font-size: 0.65rem;">
-                    <p class="thank-you" style="font-size: 0.8rem; color: #000000ff; font-weight: 600; margin: 0 0 0.3rem 0; line-height: 1.4;">
-                        Thank You! Visit Again! 🙏
+                    <p class="thank-you" style="font-size: 0.5rem; color: #494949ff; font-weight: 600; margin: 0 0 0.3rem 0; line-height: 1.4;">
+                        卐 आयुःसत्त्वबलारोग्यसुखप्रीतिविवर्धनाः। रस्याः स्निग्धाः स्थिरा हृद्या आहाराः सात्त्विकप्रियाः॥ 卐
                     </p>
                     <p style="margin: 0.2rem 0; font-size: 0.55rem; line-height: 1.3;">
                         🌐 www.sagarcafe.in
