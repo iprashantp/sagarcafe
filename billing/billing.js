@@ -596,14 +596,6 @@ class PDFGenerator {
                         <span>Sub Total</span>
                         <span>₹${subtotal.toFixed(2)}</span>
                     </div>
-                    <div class="bill-totals-row" style="display: flex; justify-content: space-between; padding: 0.25rem 0.5rem 0.25rem 2rem; color: #000; font-size: 0.7rem;">
-                        <span>CGST @ ${(taxPercent/2).toFixed(2)}%</span>
-                        <span>₹${(tax/2).toFixed(2)}</span>
-                    </div>
-                    <div class="bill-totals-row" style="display: flex; justify-content: space-between; padding: 0.25rem 0.5rem 0.25rem 2rem; color: #000; font-size: 0.7rem;">
-                        <span>SGST @ ${(taxPercent/2).toFixed(2)}%</span>
-                        <span>₹${(tax/2).toFixed(2)}</span>
-                    </div>
                     ${discount > 0 ? `
                         <div class="bill-totals-row" style="display: flex; justify-content: space-between; padding: 0.35rem 0.5rem; color: #000; font-size: 0.75rem;">
                             <span>(-) Discount</span>
