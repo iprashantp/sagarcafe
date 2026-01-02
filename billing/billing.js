@@ -11,7 +11,7 @@
 const INVENTORY_DATA = {
     "paratha": [
         { "name": "Aloo Paratha (2)", "price": 60, "icon": "🫓" },
-        { "name": "Gobhee Paratha (2)", "price": 70, "icon": "🫓" },
+        { "name": "Gobhi Paratha (2)", "price": 70, "icon": "🫓" },
         { "name": "Onion Paratha (2)", "price": 50, "icon": "🫓" },
         { "name": "Aloo + Onion Paratha (2)", "price": 70, "icon": "🫓" },
         { "name": "Paneer Paratha (2)", "price": 90, "icon": "🫓" }
@@ -511,7 +511,7 @@ class PDFGenerator {
 
                 <div class="bill-info" style="display: block !important; margin-bottom: 0.4rem; font-size: 0.6rem; padding: 0.3rem 0.3rem 0.2rem 0.3rem; color: #2c3e50;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.15rem; gap: 0.3rem; flex-wrap: nowrap;">
-                        <span style="color: #000; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><strong>Customer:</strong> ${customerName}</span>
+                        <span style="color: #000; flex: 1; min-width: 0;"><strong>Customer:</strong> ${customerName}</span>
                         <span style="color: #000; flex-shrink: 0; white-space: nowrap; text-align: right;"><strong>Bill No.:</strong> ${billNumber}</span>
                     </div>
                     <div style="display: block; margin-bottom: 0.15rem; clear: both;">
@@ -526,10 +526,10 @@ class PDFGenerator {
                 <table class="bill-table" style="width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; table-layout: fixed; min-width: 100%;">
                     <thead>
                         <tr style="border-bottom: 1px dotted #000; height: 1.2rem;">
-                            <th style="width: 50%; padding: 0.3rem 0.35rem; text-align: left; vertical-align: middle; font-weight: 600; font-size: 0.6rem; color: #000;">Items</th>
-                            <th style="width: 10%; padding: 0.3rem 0.35rem; text-align: center; vertical-align: middle; font-weight: 600; font-size: 0.6rem; color: #000;">Qty</th>
-                            <th style="width: 18%; padding: 0.3rem 0.35rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.6rem; color: #000;">Price</th>
-                            <th style="width: 22%; padding: 0.3rem 0.35rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.6rem; color: #000;">Amount</th>
+                            <th style="width: 50%; padding: 0.3rem 0.35rem; text-align: left; vertical-align: middle; font-weight: 600; font-size: 0.6rem; line-height: 1.2rem; color: #000;">Item</th>
+                            <th style="width: 10%; padding: 0.3rem 0.35rem; text-align: center; vertical-align: middle; font-weight: 600; font-size: 0.6rem; line-height: 1.2rem; color: #000;">Qty</th>
+                            <th style="width: 18%; padding: 0.3rem 0.35rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.6rem; line-height: 1.2rem; color: #000;">Price</th>
+                            <th style="width: 22%; padding: 0.3rem 0.35rem; text-align: right; vertical-align: middle; font-weight: 600; font-size: 0.6rem; line-height: 1.2rem; color: #000;">Amount</th>
                         </tr>
                     </thead>
                     <tbody>
