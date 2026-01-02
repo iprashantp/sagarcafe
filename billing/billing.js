@@ -888,10 +888,13 @@ class BillingController {
             }
         });
 
-        // Generate bill
-        document.getElementById('generateBill').addEventListener('click', () => {
-            this.openCheckoutModal();
-        });
+        // Floating checkout button
+        const floatingCheckout = document.getElementById('floatingCheckout');
+        if (floatingCheckout) {
+            floatingCheckout.addEventListener('click', () => {
+                this.openCheckoutModal();
+            });
+        }
 
         // Modal events
         this.bindModalEvents();
@@ -999,6 +1002,37 @@ class BillingController {
     updateView() {
         this.view.renderBillItems(this.bill.items);
         this.view.renderSummary(this.bill.getBillData());
+        this.updateFloatingCheckout();
+        this.updateEmptyCartButton();
+    }
+
+    updateFloatingCheckout() {
+        const floatingBtn = document.getElementById('floatingCheckout');
+        const badge = document.getElementById('checkoutBadge');
+        
+        if (floatingBtn && badge) {
+            // Calculate total quantity (sum of all item quantities)
+            const totalQuantity = this.bill.items.reduce((sum, item) => sum + item.quantity, 0);
+            badge.textContent = totalQuantity;
+            
+            // Show/hide button based on items
+            if (this.bill.items.length > 0) {
+                floatingBtn.classList.remove('hidden');
+            } else {
+                floatingBtn.classList.add('hidden');
+            }
+        }
+    }
+
+    updateEmptyCartButton() {
+        const clearBtn = document.getElementById('clearBill');
+        if (clearBtn) {
+            if (this.bill.items.length > 0) {
+                clearBtn.style.display = 'flex';
+            } else {
+                clearBtn.style.display = 'none';
+            }
+        }
     }
 
     openEditModal(index) {
@@ -1041,6 +1075,12 @@ class BillingController {
         if (this.bill.items.length === 0) {
             this.view.showNotification('Please add items to generate bill', 'warning');
             return;
+        }
+
+        // Hide floating checkout button
+        const floatingBtn = document.getElementById('floatingCheckout');
+        if (floatingBtn) {
+            floatingBtn.classList.add('hidden');
         }
 
         // Populate customer info
@@ -1101,6 +1141,12 @@ class BillingController {
 
     closeCheckoutModal() {
         document.getElementById('checkoutModal').classList.remove('active');
+        
+        // Show floating checkout button if cart has items
+        const floatingBtn = document.getElementById('floatingCheckout');
+        if (floatingBtn && this.bill.items.length > 0) {
+            floatingBtn.classList.remove('hidden');
+        }
     }
 
     confirmCheckout() {
@@ -1127,6 +1173,12 @@ class BillingController {
         if (this.bill.items.length === 0) {
             this.view.showNotification('Please add items to generate bill', 'warning');
             return;
+        }
+
+        // Hide floating checkout button
+        const floatingBtn = document.getElementById('floatingCheckout');
+        if (floatingBtn) {
+            floatingBtn.classList.add('hidden');
         }
 
         const billData = this.bill.getBillData();
