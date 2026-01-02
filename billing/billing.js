@@ -340,20 +340,64 @@ class BillingView {
             'water': 'fa-water'
         };
 
+        // Show only 4 categories by default
+        const visibleCount = 4;
+        const hasMoreCategories = categories.length > visibleCount;
+        const visibleCategories = hasMoreCategories ? categories.slice(0, visibleCount) : categories;
+        const hiddenCategories = hasMoreCategories ? categories.slice(visibleCount) : [];
+
         // Generate category buttons
         const buttonsHTML = [
             '<button class="category-btn active" data-category="all"><i class="fas fa-th"></i> All</button>',
-            ...categories.map(cat => {
+            ...visibleCategories.map(cat => {
                 const icon = categoryIcons[cat] || 'fa-utensils';
                 const label = cat.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
                 return `<button class="category-btn" data-category="${cat}"><i class="fas ${icon}"></i> ${label}</button>`;
-            })
+            }),
+            // Hidden categories (initially hidden)
+            ...hiddenCategories.map(cat => {
+                const icon = categoryIcons[cat] || 'fa-utensils';
+                const label = cat.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                return `<button class="category-btn hidden-category" data-category="${cat}" style="display: none;"><i class="fas ${icon}"></i> ${label}</button>`;
+            }),
+            // More button (only if there are hidden categories)
+            hasMoreCategories ? `<button class="category-btn category-more-btn" id="categoryMoreBtn"><i class="fas fa-ellipsis-h"></i> More</button>` : ''
         ].join('');
 
         categoryFilters.innerHTML = buttonsHTML;
         
         // Update category buttons reference
         this.categoryButtons = document.querySelectorAll('.category-btn');
+
+        // Add event listener for More button
+        if (hasMoreCategories) {
+            const moreBtn = document.getElementById('categoryMoreBtn');
+            if (moreBtn) {
+                moreBtn.addEventListener('click', () => {
+                    const hiddenBtns = document.querySelectorAll('.hidden-category');
+                    const isExpanded = moreBtn.classList.contains('expanded');
+                    
+                    if (isExpanded) {
+                        // Collapse - reset to "All" category
+                        hiddenBtns.forEach(btn => btn.style.display = 'none');
+                        moreBtn.innerHTML = '<i class="fas fa-ellipsis-h"></i> More';
+                        moreBtn.classList.remove('expanded');
+                        
+                        // Reset to All category
+                        const allBtn = document.querySelector('.category-btn[data-category="all"]');
+                        if (allBtn && !allBtn.classList.contains('active')) {
+                            // Trigger click on All button to reset selection
+                            allBtn.click();
+                        }
+                    } else {
+                        // Expand
+                        hiddenBtns.forEach(btn => btn.style.display = 'inline-flex');
+                        moreBtn.innerHTML = '<i class="fas fa-chevron-up"></i> Less';
+                        moreBtn.classList.add('expanded');
+                    }
+                });
+            }
+        }
     }
 
     renderInventory(items) {
@@ -816,6 +860,10 @@ class BillingController {
         // Category filter
         this.view.categoryButtons.forEach(btn => {
             btn.addEventListener('click', () => {
+                // Skip if it's the More/Less button
+                if (btn.id === 'categoryMoreBtn') {
+                    return;
+                }
                 this.currentCategory = btn.dataset.category;
                 this.view.setActiveCategory(this.currentCategory);
                 this.renderInventory();
