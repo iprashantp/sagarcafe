@@ -2015,6 +2015,7 @@ body {
     border-radius: 20px;
     font-weight: 700;
     font-size: 0.95rem;
+    color: white !important;
 }
 
 .checkout-badge {

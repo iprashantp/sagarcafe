@@ -880,24 +880,30 @@ class BillingController {
         // Discount is set via checkout modal
 
         // Clear bill
-        document.getElementById('clearBill').addEventListener('click', () => {
-            if (this.bill.items.length > 0) {
-                if (confirm('Are you sure you want to clear all items?')) {
-                    this.bill.clearBill();
-                    this.view.showNotification('Bill cleared', 'info');
+        const clearBillBtn = document.getElementById('clearBill');
+        if (clearBillBtn) {
+            clearBillBtn.addEventListener('click', () => {
+                if (this.bill.items.length > 0) {
+                    if (confirm('Are you sure you want to clear all items?')) {
+                        this.bill.clearBill();
+                        this.view.showNotification('Bill cleared', 'info');
+                    }
                 }
-            }
-        });
+            });
+        }
 
-        // Reset bill
-        document.getElementById('resetBill').addEventListener('click', () => {
-            if (this.bill.items.length > 0) {
-                if (confirm('Are you sure you want to reset the bill?')) {
-                    this.bill.clearBill();
-                    this.view.showNotification('Bill reset', 'info');
+        // Reset bill (button removed from UI)
+        const resetBillBtn = document.getElementById('resetBill');
+        if (resetBillBtn) {
+            resetBillBtn.addEventListener('click', () => {
+                if (this.bill.items.length > 0) {
+                    if (confirm('Are you sure you want to reset the bill?')) {
+                        this.bill.clearBill();
+                        this.view.showNotification('Bill reset', 'info');
+                    }
                 }
-            }
-        });
+            });
+        }
 
         // Floating checkout button
         const floatingCheckout = document.getElementById('floatingCheckout');
@@ -1229,6 +1235,12 @@ class BillingController {
 
     closePreviewModal() {
         document.getElementById('billPreviewModal').classList.remove('active');
+        
+        // Show floating checkout button again if there are items
+        const floatingBtn = document.getElementById('floatingCheckout');
+        if (floatingBtn && this.bill.items.length > 0) {
+            floatingBtn.classList.remove('hidden');
+        }
     }
 
     async downloadPDF() {
