@@ -309,13 +309,16 @@ class BillingView {
         this.customerContactInput = document.getElementById('customerContact');
         this.billNumberInput = document.getElementById('billNumber');
         this.billDateInput = document.getElementById('billDate');
-        this.discountInput = document.getElementById('discountPercent');
         
-        // Summary elements
-        this.subtotalEl = document.getElementById('subtotal');
-        this.taxEl = document.getElementById('tax');
-        this.discountEl = document.getElementById('discount');
-        this.totalEl = document.getElementById('total');
+        // Discount input is now only in checkout modal
+        // Keep reference for backward compatibility but may be null
+        this.discountInput = null;
+        
+        // Summary elements (removed from UI, kept for compatibility)
+        this.subtotalEl = null;
+        this.taxEl = null;
+        this.discountEl = null;
+        this.totalEl = null;
     }
 
     renderCategoryFilters(categories) {
@@ -432,35 +435,28 @@ class BillingView {
                         ${item.name}
                         ${item.isPriceModified ? '<i class="fas fa-edit" style="color: var(--warning-color); font-size: 0.9rem;" title="Price modified"></i>' : ''}
                     </div>
-                    <button class="bill-item-remove" data-index="${index}">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="bill-item-details">
                     <div class="bill-item-quantity">
                         <button class="qty-btn qty-minus" data-index="${index}">-</button>
                         <span class="qty-display">${item.quantity}</span>
                         <button class="qty-btn qty-plus" data-index="${index}">+</button>
                     </div>
-                    <div class="bill-item-price">
-                        <div class="price-per-unit">₹${item.price} × ${item.quantity}</div>
-                        <div class="price-total ${item.isPriceModified ? 'price-modified' : ''}">
-                            ₹${(item.price * item.quantity).toFixed(2)}
-                        </div>
+                </div>
+                <div class="bill-item-price-row">
+                    <div class="price-per-unit">₹${item.price} × ${item.quantity}</div>
+                    <div class="price-total ${item.isPriceModified ? 'price-modified' : ''}">
+                        ₹${(item.price * item.quantity).toFixed(2)}
                     </div>
                 </div>
-                <button class="bill-item-edit" data-index="${index}">
-                    <i class="fas fa-edit"></i> Edit Price/Quantity
-                </button>
             </div>
         `).join('');
     }
 
     renderSummary(billData) {
-        this.subtotalEl.textContent = `₹${billData.subtotal.toFixed(2)}`;
-        this.taxEl.textContent = `₹${billData.tax.toFixed(2)}`;
-        this.discountEl.textContent = `-₹${billData.discount.toFixed(2)}`;
-        this.totalEl.textContent = `₹${billData.total.toFixed(2)}`;
+        // Bill summary removed from UI, only update if elements exist
+        if (this.subtotalEl) this.subtotalEl.textContent = `₹${billData.subtotal.toFixed(2)}`;
+        if (this.taxEl) this.taxEl.textContent = `₹${billData.tax.toFixed(2)}`;
+        if (this.discountEl) this.discountEl.textContent = `-₹${billData.discount.toFixed(2)}`;
+        if (this.totalEl) this.totalEl.textContent = `₹${billData.total.toFixed(2)}`;
     }
 
     setBillInfo(billNumber, date) {
@@ -897,10 +893,8 @@ class BillingController {
             this.bill.setCustomerName(e.target.value);
         });
 
-        // Discount
-        this.view.discountInput.addEventListener('input', (e) => {
-            this.bill.setDiscount(parseFloat(e.target.value) || 0);
-        });
+        // Discount input removed from bill panel, only in checkout modal now
+        // Discount is set via checkout modal
 
         // Clear bill
         document.getElementById('clearBill').addEventListener('click', () => {
@@ -908,7 +902,6 @@ class BillingController {
                 if (confirm('Are you sure you want to clear all items?')) {
                     this.bill.clearBill();
                     this.view.customerNameInput.value = '';
-                    this.view.discountInput.value = '0';
                     this.view.setBillInfo(this.bill.billNumber, this.bill.date);
                     this.view.showNotification('Bill cleared', 'info');
                 }
@@ -921,7 +914,6 @@ class BillingController {
                 if (confirm('Are you sure you want to reset the bill?')) {
                     this.bill.clearBill();
                     this.view.customerNameInput.value = '';
-                    this.view.discountInput.value = '0';
                     this.view.setBillInfo(this.bill.billNumber, this.bill.date);
                     this.view.showNotification('Bill reset', 'info');
                 }
@@ -1049,11 +1041,16 @@ class BillingController {
     updateFloatingCheckout() {
         const floatingBtn = document.getElementById('floatingCheckout');
         const badge = document.getElementById('checkoutBadge');
+        const totalDisplay = document.getElementById('floatingCheckoutTotal');
         
-        if (floatingBtn && badge) {
+        if (floatingBtn && badge && totalDisplay) {
             // Calculate total quantity (sum of all item quantities)
             const totalQuantity = this.bill.items.reduce((sum, item) => sum + item.quantity, 0);
             badge.textContent = totalQuantity;
+            
+            // Calculate and display total amount
+            const billData = this.bill.getBillData();
+            totalDisplay.textContent = `₹${billData.total.toFixed(0)}`;
             
             // Show/hide button based on items
             if (this.bill.items.length > 0) {
@@ -1132,8 +1129,8 @@ class BillingController {
         // Render checkout items
         this.renderCheckoutItems();
 
-        // Set discount and update summary
-        const currentDiscount = parseFloat(this.view.discountInput.value) || 0;
+        // Set discount from bill model (default 0)
+        const currentDiscount = this.bill.discountPercent || 0;
         document.getElementById('checkoutDiscount').value = currentDiscount;
         this.updateCheckoutSummary(currentDiscount);
 
@@ -1197,7 +1194,6 @@ class BillingController {
 
         this.view.customerNameInput.value = customerName;
         this.view.customerContactInput.value = customerContact;
-        this.view.discountInput.value = discount;
         this.bill.setCustomerName(customerName);
         this.bill.setCustomerContact(customerContact);
         this.bill.setDiscount(discount);

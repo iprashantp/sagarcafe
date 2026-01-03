@@ -85,29 +85,6 @@
                         </div>
                     </div>
 
-                    <!-- Bill Summary -->
-                    <div class="bill-summary">
-                        <div class="summary-row">
-                            <span>Subtotal:</span>
-                            <span id="subtotal">₹0.00</span>
-                        </div>
-                        <div class="summary-row" style="display: none;">
-                            <span>Tax (5%):</span>
-                            <span id="tax">₹0.00</span>
-                        </div>
-                        <div class="summary-row discount-row">
-                            <span>
-                                <i class="fas fa-percent"></i> Discount:
-                                <input type="number" id="discountPercent" min="0" max="100" value="0" step="1">%
-                            </span>
-                            <span id="discount">-₹0.00</span>
-                        </div>
-                        <div class="summary-row total-row">
-                            <span>Total:</span>
-                            <span id="total">₹0.00</span>
-                        </div>
-                    </div>
-
                     <!-- Customer Info -->
                     <div class="customer-info">
                         <div class="form-group">
@@ -144,7 +121,8 @@
     <!-- Floating Checkout Button (Mobile) -->
     <button class="floating-checkout-btn hidden" id="floatingCheckout" title="Checkout">
         <i class="fas fa-shopping-cart"></i>
-        <span>Checkout</span>
+        <span class="checkout-text">Checkout</span>
+        <span class="checkout-total" id="floatingCheckoutTotal">₹0</span>
         <span class="checkout-badge" id="checkoutBadge">0</span>
     </button>
 
