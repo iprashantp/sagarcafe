@@ -305,10 +305,6 @@ class BillingView {
         this.billItems = document.getElementById('billItems');
         this.searchInput = document.getElementById('searchInventory');
         this.categoryButtons = document.querySelectorAll('.category-btn');
-        this.customerNameInput = document.getElementById('customerName');
-        this.customerContactInput = document.getElementById('customerContact');
-        this.billNumberInput = document.getElementById('billNumber');
-        this.billDateInput = document.getElementById('billDate');
         
         // Discount input is now only in checkout modal
         // Keep reference for backward compatibility but may be null
@@ -457,11 +453,6 @@ class BillingView {
         if (this.taxEl) this.taxEl.textContent = `₹${billData.tax.toFixed(2)}`;
         if (this.discountEl) this.discountEl.textContent = `-₹${billData.discount.toFixed(2)}`;
         if (this.totalEl) this.totalEl.textContent = `₹${billData.total.toFixed(2)}`;
-    }
-
-    setBillInfo(billNumber, date) {
-        this.billNumberInput.value = billNumber;
-        this.billDateInput.value = this.formatDate(date);
     }
 
     formatDate(date) {
@@ -795,9 +786,6 @@ class BillingController {
         // Subscribe to bill changes
         this.bill.subscribe(() => this.updateView());
         
-        // Set bill info
-        this.view.setBillInfo(this.bill.billNumber, this.bill.date);
-        
         // Load inventory and initialize
         this.loadInventoryAndInit();
     }
@@ -888,11 +876,6 @@ class BillingController {
             }
         });
 
-        // Customer name
-        this.view.customerNameInput.addEventListener('change', (e) => {
-            this.bill.setCustomerName(e.target.value);
-        });
-
         // Discount input removed from bill panel, only in checkout modal now
         // Discount is set via checkout modal
 
@@ -901,8 +884,6 @@ class BillingController {
             if (this.bill.items.length > 0) {
                 if (confirm('Are you sure you want to clear all items?')) {
                     this.bill.clearBill();
-                    this.view.customerNameInput.value = '';
-                    this.view.setBillInfo(this.bill.billNumber, this.bill.date);
                     this.view.showNotification('Bill cleared', 'info');
                 }
             }
@@ -913,8 +894,6 @@ class BillingController {
             if (this.bill.items.length > 0) {
                 if (confirm('Are you sure you want to reset the bill?')) {
                     this.bill.clearBill();
-                    this.view.customerNameInput.value = '';
-                    this.view.setBillInfo(this.bill.billNumber, this.bill.date);
                     this.view.showNotification('Bill reset', 'info');
                 }
             }
@@ -925,6 +904,27 @@ class BillingController {
         if (floatingCheckout) {
             floatingCheckout.addEventListener('click', () => {
                 this.openCheckoutModal();
+            });
+        }
+
+        // Handle back-to-top button visibility and shift floating checkout button
+        const backToTop = document.getElementById('backToTop');
+        if (backToTop && floatingCheckout) {
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTop.classList.add('visible');
+                    floatingCheckout.classList.add('shift-up');
+                } else {
+                    backToTop.classList.remove('visible');
+                    floatingCheckout.classList.remove('shift-up');
+                }
+            });
+
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             });
         }
 
@@ -1120,9 +1120,9 @@ class BillingController {
             floatingBtn.classList.add('hidden');
         }
 
-        // Populate customer info
-        document.getElementById('checkoutCustomerName').value = this.view.customerNameInput.value;
-        document.getElementById('checkoutCustomerContact').value = this.view.customerContactInput.value;
+        // Populate customer info (default to empty)
+        document.getElementById('checkoutCustomerName').value = '';
+        document.getElementById('checkoutCustomerContact').value = '';
         document.getElementById('checkoutBillNumber').textContent = this.bill.billNumber;
         document.getElementById('checkoutBillDate').textContent = this.view.formatDate(this.bill.date);
 
@@ -1192,8 +1192,6 @@ class BillingController {
         const customerContact = document.getElementById('checkoutCustomerContact').value;
         const discount = parseFloat(document.getElementById('checkoutDiscount').value) || 0;
 
-        this.view.customerNameInput.value = customerName;
-        this.view.customerContactInput.value = customerContact;
         this.bill.setCustomerName(customerName);
         this.bill.setCustomerContact(customerContact);
         this.bill.setDiscount(discount);

@@ -135,10 +135,12 @@ const mobileToggle = document.getElementById('mobileToggle');
 const navLinks = document.querySelectorAll('.nav-link');
 
 // Mobile menu toggle
-mobileToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    mobileToggle.classList.toggle('active');
-});
+if (mobileToggle) {
+    mobileToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        mobileToggle.classList.toggle('active');
+    });
+}
 
 // Close mobile menu when clicking a link
 navLinks.forEach(link => {
