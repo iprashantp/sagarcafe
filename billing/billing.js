@@ -403,10 +403,8 @@ class BillingView {
         console.log('Rendering inventory items:', items);
         this.inventoryGrid.innerHTML = items.map(item => `
             <div class="inventory-item" data-id="${item.id}">
-                <div class="item-icon">${item.icon}</div>
                 <div class="item-name">${item.name}</div>
-                <div class="item-price">₹${item.price}</div>
-                <div class="item-category">${item.category}</div>
+                <div class="item-price">${item.icon} ₹${item.price}</div>
             </div>
         `).join('');
         console.log('Inventory grid HTML updated');
@@ -961,10 +959,6 @@ class BillingController {
             this.closeCheckoutModal();
         });
 
-        document.getElementById('cancelCheckout').addEventListener('click', () => {
-            this.closeCheckoutModal();
-        });
-
         document.getElementById('confirmCheckout').addEventListener('click', () => {
             this.confirmCheckout();
         });
@@ -1129,8 +1123,6 @@ class BillingController {
         // Populate customer info (default to empty)
         document.getElementById('checkoutCustomerName').value = '';
         document.getElementById('checkoutCustomerContact').value = '';
-        document.getElementById('checkoutBillNumber').textContent = this.bill.billNumber;
-        document.getElementById('checkoutBillDate').textContent = this.view.formatDate(this.bill.date);
 
         // Render checkout items
         this.renderCheckoutItems();
