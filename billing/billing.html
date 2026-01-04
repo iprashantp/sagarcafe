@@ -147,35 +147,11 @@
                 </div>
                 <!-- Order Summary -->
                 <div class="checkout-section">
-                    <h4><i class="fas fa-shopping-cart"></i> Order Summary</h4>
-                    <div id="checkoutItemsList"></div>
-                </div>
-
-                <!-- Bill Summary -->
-                <div class="checkout-section">
-                    <h4><i class="fas fa-calculator"></i> Bill Summary</h4>
-                    <div class="checkout-summary">
-                        <div class="summary-row">
-                            <span>Subtotal:</span>
-                            <span id="checkoutSubtotal">₹0.00</span>
-                        </div>
-                        <div class="summary-row" style="display: none;">
-                            <span>Tax (0%):</span>
-                            <span id="checkoutTax">₹0.00</span>
-                        </div>
-                        <div class="summary-row">
-                            <span>Discount:</span>
-                            <div class="discount-input-group">
-                                <input type="number" id="checkoutDiscount" min="0" max="100" value="0" step="0.1">
-                                <span>%</span>
-                                <span class="discount-amount" id="checkoutDiscountAmount">-₹0.00</span>
-                            </div>
-                        </div>
-                        <div class="summary-row total-row">
-                            <span>Total Amount:</span>
-                            <span id="checkoutTotal">₹0.00</span>
-                        </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h4 style="margin: 0;"><i class="fas fa-shopping-cart"></i> Order Summary</h4>
+                        <h4 style="margin: 0; font-weight: 700; font-size: 1.1rem; color: var(--primary-color);">Total: <span id="checkoutTotal">₹0.00</span></h4>
                     </div>
+                    <div id="checkoutItemsList"></div>
                 </div>
 
                 <!-- Customer Information -->
@@ -218,6 +194,19 @@
                 <button class="billing-btn-primary" id="sharePDF">
                     <i class="fas fa-share-alt"></i> Share
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-body">
+                <p id="confirmMessage" style="text-align: center; font-size: 1rem; margin: 1.5rem 0;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="billing-btn-secondary" id="confirmCancel">Cancel</button>
+                <button class="billing-btn-primary" id="confirmOk">Confirm</button>
             </div>
         </div>
     </div>

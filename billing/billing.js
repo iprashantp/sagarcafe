@@ -882,10 +882,10 @@ class BillingController {
         if (clearBillBtn) {
             clearBillBtn.addEventListener('click', () => {
                 if (this.bill.items.length > 0) {
-                    if (confirm('Are you sure you want to clear all items?')) {
+                    this.showConfirmModal('Are you sure you want to clear all items?', () => {
                         this.bill.clearBill();
                         this.view.showNotification('Bill cleared', 'info');
-                    }
+                    });
                 }
             });
         }
@@ -895,10 +895,10 @@ class BillingController {
         if (resetBillBtn) {
             resetBillBtn.addEventListener('click', () => {
                 if (this.bill.items.length > 0) {
-                    if (confirm('Are you sure you want to reset the bill?')) {
+                    this.showConfirmModal('Are you sure you want to reset the bill?', () => {
                         this.bill.clearBill();
                         this.view.showNotification('Bill reset', 'info');
-                    }
+                    });
                 }
             });
         }
@@ -963,10 +963,6 @@ class BillingController {
             this.confirmCheckout();
         });
 
-        document.getElementById('checkoutDiscount').addEventListener('input', (e) => {
-            this.updateCheckoutSummary(parseFloat(e.target.value) || 0);
-        });
-
         // Preview modal
         previewModal.querySelector('.modal-close').addEventListener('click', () => {
             this.closePreviewModal();
@@ -1000,6 +996,25 @@ class BillingController {
         previewModal.addEventListener('click', (e) => {
             if (e.target === previewModal) this.closePreviewModal();
         });
+
+        // Confirm modal
+        const confirmModal = document.getElementById('confirmModal');
+        if (confirmModal) {
+            const confirmCloseBtn = confirmModal.querySelector('.modal-close');
+            if (confirmCloseBtn) {
+                confirmCloseBtn.addEventListener('click', () => {
+                    this.closeConfirmModal();
+                });
+            }
+
+            document.getElementById('confirmCancel').addEventListener('click', () => {
+                this.closeConfirmModal();
+            });
+
+            confirmModal.addEventListener('click', (e) => {
+                if (e.target === confirmModal) this.closeConfirmModal();
+            });
+        }
     }
 
     addItemToBill(itemId) {
@@ -1127,10 +1142,8 @@ class BillingController {
         // Render checkout items
         this.renderCheckoutItems();
 
-        // Set discount from bill model (default 0)
-        const currentDiscount = this.bill.discountPercent || 0;
-        document.getElementById('checkoutDiscount').value = currentDiscount;
-        this.updateCheckoutSummary(currentDiscount);
+        // Update checkout total
+        this.updateCheckoutSummary();
 
         document.getElementById('checkoutModal').classList.add('active');
     }
@@ -1162,15 +1175,8 @@ class BillingController {
         return inventoryItem ? inventoryItem.icon : '🍽️';
     }
 
-    updateCheckoutSummary(discountPercent) {
-        const subtotal = this.bill.getSubtotal();
-        const tax = this.bill.getTax();
-        const discount = (subtotal * discountPercent) / 100;
-        const total = subtotal + tax - discount;
-
-        document.getElementById('checkoutSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
-        document.getElementById('checkoutTax').textContent = `₹${tax.toFixed(2)}`;
-        document.getElementById('checkoutDiscountAmount').textContent = `-₹${discount.toFixed(2)}`;
+    updateCheckoutSummary() {
+        const total = this.bill.getTotal();
         document.getElementById('checkoutTotal').textContent = `₹${total.toFixed(2)}`;
     }
 
@@ -1185,14 +1191,12 @@ class BillingController {
     }
 
     confirmCheckout() {
-        // Update customer name, contact, and discount from checkout modal
+        // Update customer name and contact from checkout modal
         const customerName = document.getElementById('checkoutCustomerName').value;
         const customerContact = document.getElementById('checkoutCustomerContact').value;
-        const discount = parseFloat(document.getElementById('checkoutDiscount').value) || 0;
 
         this.bill.setCustomerName(customerName);
         this.bill.setCustomerContact(customerContact);
-        this.bill.setDiscount(discount);
 
         // Close checkout modal
         this.closeCheckoutModal();
@@ -1233,6 +1237,27 @@ class BillingController {
         if (floatingBtn && this.bill.items.length > 0) {
             floatingBtn.classList.remove('hidden');
         }
+    }
+
+    showConfirmModal(message, onConfirm) {
+        document.getElementById('confirmMessage').textContent = message;
+        
+        const confirmOkBtn = document.getElementById('confirmOk');
+        const newConfirmOkBtn = confirmOkBtn.cloneNode(true);
+        confirmOkBtn.parentNode.replaceChild(newConfirmOkBtn, confirmOkBtn);
+        
+        newConfirmOkBtn.addEventListener('click', () => {
+            this.closeConfirmModal();
+            if (onConfirm) {
+                onConfirm();
+            }
+        });
+        
+        document.getElementById('confirmModal').classList.add('active');
+    }
+
+    closeConfirmModal() {
+        document.getElementById('confirmModal').classList.remove('active');
     }
 
     async downloadPDF() {

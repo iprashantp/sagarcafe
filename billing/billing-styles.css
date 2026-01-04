@@ -426,21 +426,22 @@ body {
    ========================================== */
 .inventory-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, 150px);
     gap: 1rem;
     min-height: 200px;
+    justify-content: start;
 }
 
 @media (max-width: 768px) {
     .inventory-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        grid-template-columns: repeat(auto-fill, 130px);
         gap: 0.75rem;
     }
 }
 
 @media (max-width: 480px) {
     .inventory-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fill, 140px);
         gap: 0.5rem;
     }
 }
