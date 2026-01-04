@@ -976,29 +976,34 @@ class BillingController {
             this.closePreviewModal();
         });
 
-        document.getElementById('closePreview').addEventListener('click', () => {
-            this.closePreviewModal();
-        });
-
         // Floating bill action buttons
         const floatingDownloadPDF = document.getElementById('floatingDownloadPDF');
         const floatingSharePDF = document.getElementById('floatingSharePDF');
         const floatingPrintPDF = document.getElementById('floatingPrintPDF');
         
         if (floatingDownloadPDF) {
-            floatingDownloadPDF.addEventListener('click', () => {
+            floatingDownloadPDF.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Download button clicked');
                 this.downloadPDF();
             });
         }
 
         if (floatingSharePDF) {
-            floatingSharePDF.addEventListener('click', () => {
+            floatingSharePDF.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Share button clicked');
                 this.sharePDF();
             });
         }
 
         if (floatingPrintPDF) {
-            floatingPrintPDF.addEventListener('click', () => {
+            floatingPrintPDF.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Print button clicked');
                 this.printPDF();
             });
         }
