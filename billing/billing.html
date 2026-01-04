@@ -137,14 +137,6 @@
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
-                <!-- Action Buttons -->
-                <div class="checkout-section" style="border-bottom: 2px solid #e0e0e0; padding-bottom: 1rem; margin-bottom: 1rem;">
-                    <div style="display: flex; gap: 0.8rem; justify-content: center;">
-                        <button class="billing-btn-primary" id="confirmCheckout" style="flex: 1; max-width: 180px; font-size: 0.9rem; padding: 0.5rem 0.8rem;">
-                            <i class="fas fa-file-pdf"></i> Generate Bill
-                        </button>
-                    </div>
-                </div>
                 <!-- Order Summary -->
                 <div class="checkout-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
@@ -172,6 +164,12 @@
             </div>
         </div>
     </div>
+
+    <!-- Floating Generate Bill Button (shown when checkout modal is open) -->
+    <button class="floating-checkout-btn hidden" id="floatingGenerateBill" style="z-index: 1002;">
+        <i class="fas fa-file-pdf"></i>
+        <span class="checkout-text">Generate Bill</span>
+    </button>
 
     <!-- Bill Preview Modal -->
     <div class="modal" id="billPreviewModal">

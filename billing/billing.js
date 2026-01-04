@@ -399,14 +399,18 @@ class BillingView {
         }
     }
 
-    renderInventory(items) {
+    renderInventory(items, billItems = []) {
         console.log('Rendering inventory items:', items);
-        this.inventoryGrid.innerHTML = items.map(item => `
-            <div class="inventory-item" data-id="${item.id}">
-                <div class="item-name">${item.name}</div>
-                <div class="item-price">${item.icon} ₹${item.price}</div>
-            </div>
-        `).join('');
+        const billItemIds = billItems.map(bi => bi.id);
+        this.inventoryGrid.innerHTML = items.map(item => {
+            const isSelected = billItemIds.includes(item.id);
+            return `
+                <div class="inventory-item ${isSelected ? 'selected' : ''}" data-id="${item.id}">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">${item.icon} ₹${item.price}</div>
+                </div>
+            `;
+        }).join('');
         console.log('Inventory grid HTML updated');
     }
 
@@ -959,9 +963,13 @@ class BillingController {
             this.closeCheckoutModal();
         });
 
-        document.getElementById('confirmCheckout').addEventListener('click', () => {
-            this.confirmCheckout();
-        });
+        // Floating Generate Bill button
+        const floatingGenerateBill = document.getElementById('floatingGenerateBill');
+        if (floatingGenerateBill) {
+            floatingGenerateBill.addEventListener('click', () => {
+                this.confirmCheckout();
+            });
+        }
 
         // Preview modal
         previewModal.querySelector('.modal-close').addEventListener('click', () => {
@@ -1034,7 +1042,7 @@ class BillingController {
             items = this.inventory.getItemsByCategory(this.currentCategory);
         }
         console.log('Items to render:', items);
-        this.view.renderInventory(items);
+        this.view.renderInventory(items, this.bill.items);
     }
 
     handleSearch(query) {
@@ -1042,7 +1050,7 @@ class BillingController {
             this.renderInventory();
         } else {
             const items = this.inventory.searchItems(query);
-            this.view.renderInventory(items);
+            this.view.renderInventory(items, this.bill.items);
         }
     }
 
@@ -1051,6 +1059,7 @@ class BillingController {
         this.view.renderSummary(this.bill.getBillData());
         this.updateFloatingCheckout();
         this.updateEmptyCartButton();
+        this.renderInventory(); // Re-render inventory to update selected state
     }
 
     updateFloatingCheckout() {
@@ -1135,6 +1144,12 @@ class BillingController {
             floatingBtn.classList.add('hidden');
         }
 
+        // Show floating generate bill button
+        const floatingGenerateBill = document.getElementById('floatingGenerateBill');
+        if (floatingGenerateBill) {
+            floatingGenerateBill.classList.remove('hidden');
+        }
+
         // Populate customer info (default to empty)
         document.getElementById('checkoutCustomerName').value = '';
         document.getElementById('checkoutCustomerContact').value = '';
@@ -1182,6 +1197,12 @@ class BillingController {
 
     closeCheckoutModal() {
         document.getElementById('checkoutModal').classList.remove('active');
+        
+        // Hide floating generate bill button
+        const floatingGenerateBill = document.getElementById('floatingGenerateBill');
+        if (floatingGenerateBill) {
+            floatingGenerateBill.classList.add('hidden');
+        }
         
         // Show floating checkout button if cart has items
         const floatingBtn = document.getElementById('floatingCheckout');

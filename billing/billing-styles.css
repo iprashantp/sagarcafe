@@ -441,7 +441,7 @@ body {
 
 @media (max-width: 480px) {
     .inventory-grid {
-        grid-template-columns: repeat(auto-fill, 140px);
+        grid-template-columns: repeat(auto-fill, 100px);
         gap: 0.5rem;
     }
 }
@@ -452,7 +452,7 @@ body {
     border-radius: var(--border-radius-sm);
     padding: 0.5rem 0.7rem;
     cursor: pointer;
-    transition: var(--transition);
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -498,6 +498,17 @@ body {
 
 .inventory-item:hover::before {
     transform: scaleX(1);
+}
+
+.inventory-item.selected {
+    transform: translateY(-2px);
+    border-color: var(--primary-color);
+    background: var(--bg-light);
+    box-shadow: var(--billing-shadow-lg);
+}
+
+.inventory-item.selected::before {
+    transform: scaleX(0.7);
 }
 
 
@@ -1014,11 +1025,16 @@ body {
 }
 
 @media (max-width: 480px) {
+    .modal {
+        align-items: flex-start !important;
+        padding-top: 60px !important;
+    }
+    
     .modal-content {
         width: 100%;
-        max-height: 85vh;
+        max-height: calc(95vh - 60px);
         border-radius: 0;
-        margin-top: 15vh;
+        margin-top: 0 !important;
     }
 }
 
@@ -1267,6 +1283,10 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .checkout-item {
@@ -1277,12 +1297,16 @@ body {
     background: var(--bg-gray);
     border-radius: var(--border-radius-sm);
     border: 2px solid var(--border-color);
+    gap: 0.5rem;
+    min-height: 3rem;
 }
 
 .checkout-item-left {
     display: flex;
     align-items: center;
     gap: 0.4rem;
+    flex: 1;
+    min-width: 0;
 }
 
 .checkout-item-icon {
@@ -1309,6 +1333,8 @@ body {
     font-weight: 700;
     color: var(--primary-color);
     font-size: 0.95rem;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .checkout-summary {
@@ -1386,7 +1412,7 @@ body {
     }
     
     #checkoutItemsList {
-        max-height: 200px;
+        max-height: 55vh;
         overflow-y: auto;
         padding-right: 0.5rem;
         -webkit-overflow-scrolling: touch;
