@@ -72,13 +72,19 @@ const INVENTORY_DATA = {
         { "name": "White Sauce Pasta", "price": 100, "icon": "🍝" }
     ],
     "coffee": [
+        { "name": "Tea Cut", "price": 8, "icon": "🍵" },
         { "name": "Tea", "price": 15, "icon": "🍵" },
+        { "name": "Kullhad Tea", "price": 15, "icon": "🍵" },
         { "name": "Hot Coffee", "price": 25, "icon": "☕" }
     ],
     "momos": [
         { "name": "Steamed Momos", "price": 50, "icon": "🥟" },
         { "name": "Fried Momos", "price": 60, "icon": "🥟" },
         { "name": "Paneer Momos", "price": 70, "icon": "🥟" }
+    ],
+    "breakfast": [
+        { "name": "poha", "price": 15, "icon": "🥘" },
+        { "name": "jalebi", "price": 20, "icon": "𖦹" },
     ],
     "water": [
         { "name": "water bottle 250ml", "price": 5, "icon": "🥛" },
