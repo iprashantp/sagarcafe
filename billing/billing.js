@@ -980,17 +980,28 @@ class BillingController {
             this.closePreviewModal();
         });
 
-        document.getElementById('downloadPDF').addEventListener('click', () => {
-            this.downloadPDF();
-        });
+        // Floating bill action buttons
+        const floatingDownloadPDF = document.getElementById('floatingDownloadPDF');
+        const floatingSharePDF = document.getElementById('floatingSharePDF');
+        const floatingPrintPDF = document.getElementById('floatingPrintPDF');
+        
+        if (floatingDownloadPDF) {
+            floatingDownloadPDF.addEventListener('click', () => {
+                this.downloadPDF();
+            });
+        }
 
-        document.getElementById('sharePDF').addEventListener('click', () => {
-            this.sharePDF();
-        });
+        if (floatingSharePDF) {
+            floatingSharePDF.addEventListener('click', () => {
+                this.sharePDF();
+            });
+        }
 
-        document.getElementById('printPDF').addEventListener('click', () => {
-            this.printPDF();
-        });
+        if (floatingPrintPDF) {
+            floatingPrintPDF.addEventListener('click', () => {
+                this.printPDF();
+            });
+        }
 
         // Close on outside click
         editModal.addEventListener('click', (e) => {
@@ -1247,11 +1258,23 @@ class BillingController {
         
         document.getElementById('billPreviewModal').classList.add('active');
         
+        // Show floating bill action buttons
+        const floatingBillActions = document.getElementById('floatingBillActions');
+        if (floatingBillActions) {
+            floatingBillActions.classList.remove('hidden');
+        }
+        
         this.currentPDFGenerator = pdfGenerator;
     }
 
     closePreviewModal() {
         document.getElementById('billPreviewModal').classList.remove('active');
+        
+        // Hide floating bill action buttons
+        const floatingBillActions = document.getElementById('floatingBillActions');
+        if (floatingBillActions) {
+            floatingBillActions.classList.add('hidden');
+        }
         
         // Show floating checkout button again if there are items
         const floatingBtn = document.getElementById('floatingCheckout');

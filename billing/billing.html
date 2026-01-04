@@ -166,7 +166,7 @@
     </div>
 
     <!-- Floating Generate Bill Button (shown when checkout modal is open) -->
-    <button class="floating-checkout-btn hidden" id="floatingGenerateBill" style="z-index: 1002;">
+    <button class="floating-checkout-btn hidden" id="floatingGenerateBill" style="z-index: 1002; padding: 1.2rem 2rem; font-size: 1.1rem;">
         <i class="fas fa-file-pdf"></i>
         <span class="checkout-text">Generate Bill</span>
     </button>
@@ -181,19 +181,20 @@
             <div class="modal-body">
                 <div id="billPreview"></div>
             </div>
-            <div class="modal-footer">
-                <button class="billing-btn-secondary" id="closePreview">Close</button>
-                <button class="billing-btn-primary" id="printPDF">
-                    <i class="fas fa-print"></i> Print
-                </button>
-                <button class="billing-btn-primary" id="downloadPDF">
-                    <i class="fas fa-download"></i> Download PDF
-                </button>
-                <button class="billing-btn-primary" id="sharePDF">
-                    <i class="fas fa-share-alt"></i> Share
-                </button>
-            </div>
         </div>
+    </div>
+
+    <!-- Floating Bill Action Buttons (shown when bill preview is open) -->
+    <div id="floatingBillActions" class="hidden" style="position: fixed; right: 0.5rem; top: 50%; transform: translateY(-50%); z-index: 1003; display: flex; flex-direction: column; gap: 0.8rem;">
+        <button class="floating-action-btn" id="floatingPrintPDF" title="Print">
+            <i class="fas fa-print"></i>
+        </button>
+        <button class="floating-action-btn" id="floatingDownloadPDF" title="Download PDF">
+            <i class="fas fa-download"></i>
+        </button>
+        <button class="floating-action-btn" id="floatingSharePDF" title="Share">
+            <i class="fas fa-share-alt"></i>
+        </button>
     </div>
 
     <!-- Confirmation Modal -->
