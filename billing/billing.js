@@ -413,20 +413,23 @@ class BillingView {
         const billItemIds = billItems.map(bi => Number(bi.id));
         console.log('Bill item IDs:', billItemIds);
         
-        // Always do a full re-render to ensure consistency
-        this.inventoryGrid.innerHTML = items.map(item => {
-            const itemId = Number(item.id);
-            const isSelected = billItemIds.includes(itemId);
-            console.log(`Item ${item.name} (ID: ${itemId}): selected = ${isSelected}`);
-            return `
-                <div class="inventory-item ${isSelected ? 'selected' : ''}" data-id="${item.id}">
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-price">${item.icon} ₹${item.price}</div>
-                </div>
-            `;
-        }).join('');
-        
-        console.log('Inventory grid updated');
+        // Use requestAnimationFrame to ensure DOM is stable before updating
+        requestAnimationFrame(() => {
+            // Always do a full re-render to ensure consistency
+            this.inventoryGrid.innerHTML = items.map(item => {
+                const itemId = Number(item.id);
+                const isSelected = billItemIds.includes(itemId);
+                console.log(`Item ${item.name} (ID: ${itemId}): selected = ${isSelected}`);
+                return `
+                    <div class="inventory-item ${isSelected ? 'selected' : ''}" data-id="${item.id}">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">${item.icon} ₹${item.price}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            console.log('Inventory grid updated');
+        });
     }
 
     renderBillItems(items) {

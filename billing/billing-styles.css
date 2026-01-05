@@ -501,7 +501,6 @@ body {
 }
 
 .inventory-item.selected {
-    transform: translateY(-2px);
     border-color: var(--primary-color);
     background: var(--bg-light);
     box-shadow: var(--billing-shadow-lg);
@@ -509,6 +508,21 @@ body {
 
 .inventory-item.selected::before {
     transform: scaleX(0.7);
+}
+
+/* Prevent layout shifts on mobile */
+@media (max-width: 768px) {
+    .inventory-item {
+        will-change: auto;
+    }
+    
+    .inventory-item.selected {
+        transform: none;
+    }
+    
+    .inventory-item:active {
+        transform: scale(0.95);
+    }
 }
 
 
