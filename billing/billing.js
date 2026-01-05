@@ -408,16 +408,38 @@ class BillingView {
     renderInventory(items, billItems = []) {
         console.log('Rendering inventory items:', items);
         const billItemIds = billItems.map(bi => bi.id);
-        this.inventoryGrid.innerHTML = items.map(item => {
-            const isSelected = billItemIds.includes(item.id);
-            return `
-                <div class="inventory-item ${isSelected ? 'selected' : ''}" data-id="${item.id}">
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-price">${item.icon} ₹${item.price}</div>
-                </div>
-            `;
-        }).join('');
-        console.log('Inventory grid HTML updated');
+        
+        // Check if we need to re-render the entire grid
+        const currentItems = Array.from(this.inventoryGrid.querySelectorAll('.inventory-item'));
+        const needsFullRender = currentItems.length !== items.length || 
+                                currentItems.some((el, i) => parseInt(el.dataset.id) !== items[i].id);
+        
+        if (needsFullRender) {
+            // Full re-render needed
+            this.inventoryGrid.innerHTML = items.map(item => {
+                const isSelected = billItemIds.includes(item.id);
+                return `
+                    <div class="inventory-item ${isSelected ? 'selected' : ''}" data-id="${item.id}">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">${item.icon} ₹${item.price}</div>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            // Just update selected states
+            currentItems.forEach((el) => {
+                const itemId = parseInt(el.dataset.id);
+                const shouldBeSelected = billItemIds.includes(itemId);
+                
+                if (shouldBeSelected && !el.classList.contains('selected')) {
+                    el.classList.add('selected');
+                } else if (!shouldBeSelected && el.classList.contains('selected')) {
+                    el.classList.remove('selected');
+                }
+            });
+        }
+        
+        console.log('Inventory grid updated');
     }
 
     renderBillItems(items) {
