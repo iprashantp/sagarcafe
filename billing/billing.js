@@ -429,13 +429,19 @@ class BillingView {
             `;
         }).join('');
         
-        // Force a reflow to ensure styles are applied
-        void this.inventoryGrid.offsetHeight;
-        
-        // Re-enable clicks
-        this.inventoryGrid.style.pointerEvents = '';
-        
-        console.log('Inventory grid updated');
+        // Double requestAnimationFrame ensures rendering happens after layout is complete
+        // This is critical for mobile browsers where layout shifts from cart changes
+        // can cause misalignment between DOM and visual rendering
+        requestAnimationFrame(() => {
+            // Force a style recalculation
+            void this.inventoryGrid.offsetHeight;
+            
+            // Re-enable clicks after layout is stable
+            requestAnimationFrame(() => {
+                this.inventoryGrid.style.pointerEvents = '';
+                console.log('Inventory grid updated and interactive');
+            });
+        });
     }
 
     renderBillItems(items) {
@@ -1113,7 +1119,14 @@ class BillingController {
         this.view.renderSummary(this.bill.getBillData());
         this.updateFloatingCheckout();
         this.updateEmptyCartButton();
-        this.renderInventory(); // Re-render inventory to update selected state
+        
+        // Delay inventory re-render to allow DOM to complete layout changes
+        // This prevents incorrect highlighting on mobile when cart size changes
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                this.renderInventory(); // Re-render inventory to update selected state
+            });
+        });
     }
 
     updateFloatingCheckout() {
