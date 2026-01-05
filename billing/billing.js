@@ -413,23 +413,29 @@ class BillingView {
         const billItemIds = billItems.map(bi => Number(bi.id));
         console.log('Bill item IDs:', billItemIds);
         
-        // Use requestAnimationFrame to ensure DOM is stable before updating
-        requestAnimationFrame(() => {
-            // Always do a full re-render to ensure consistency
-            this.inventoryGrid.innerHTML = items.map(item => {
-                const itemId = Number(item.id);
-                const isSelected = billItemIds.includes(itemId);
-                console.log(`Item ${item.name} (ID: ${itemId}): selected = ${isSelected}`);
-                return `
-                    <div class="inventory-item ${isSelected ? 'selected' : ''}" data-id="${item.id}">
-                        <div class="item-name">${item.name}</div>
-                        <div class="item-price">${item.icon} ₹${item.price}</div>
-                    </div>
-                `;
-            }).join('');
-            
-            console.log('Inventory grid updated');
-        });
+        // Disable clicks during render
+        this.inventoryGrid.style.pointerEvents = 'none';
+        
+        // Always do a full re-render to ensure consistency
+        this.inventoryGrid.innerHTML = items.map(item => {
+            const itemId = Number(item.id);
+            const isSelected = billItemIds.includes(itemId);
+            console.log(`Item ${item.name} (ID: ${itemId}): selected = ${isSelected}`);
+            return `
+                <div class="inventory-item ${isSelected ? 'selected' : ''}" data-id="${item.id}">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">${item.icon} ₹${item.price}</div>
+                </div>
+            `;
+        }).join('');
+        
+        // Force a reflow to ensure styles are applied
+        void this.inventoryGrid.offsetHeight;
+        
+        // Re-enable clicks
+        this.inventoryGrid.style.pointerEvents = '';
+        
+        console.log('Inventory grid updated');
     }
 
     renderBillItems(items) {
@@ -846,9 +852,18 @@ class BillingController {
     bindEvents() {
         // Inventory item click
         this.view.inventoryGrid.addEventListener('click', (e) => {
+            console.log('Click event:', e.target);
             const item = e.target.closest('.inventory-item');
             if (item) {
                 const itemId = parseInt(item.dataset.id);
+                const itemName = item.querySelector('.item-name').textContent;
+                console.log('Clicked item ID:', itemId, 'Name:', itemName);
+                console.log('Item element:', item);
+                
+                // Get the inventory item to verify
+                const inventoryItem = this.inventory.getItemById(itemId);
+                console.log('Inventory item found:', inventoryItem);
+                
                 this.addItemToBill(itemId);
             }
         });
@@ -1060,10 +1075,15 @@ class BillingController {
     }
 
     addItemToBill(itemId) {
+        console.log('addItemToBill called with ID:', itemId);
         const item = this.inventory.getItemById(itemId);
+        console.log('Item retrieved from inventory:', item);
         if (item) {
             this.bill.addItem(item);
             this.view.showNotification(`${item.name} added to bill`, 'success');
+            console.log('Bill items after adding:', this.bill.items);
+        } else {
+            console.error('Item not found with ID:', itemId);
         }
     }
 

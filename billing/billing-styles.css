@@ -516,6 +516,16 @@ body {
         will-change: auto;
     }
     
+    /* Disable hover on touch devices to prevent touch issues */
+    .inventory-item:hover {
+        transform: none;
+        box-shadow: var(--billing-shadow-md);
+    }
+    
+    .inventory-item:hover::before {
+        transform: scaleX(0);
+    }
+    
     .inventory-item.selected {
         transform: none;
     }
