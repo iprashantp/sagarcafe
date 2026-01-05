@@ -407,37 +407,24 @@ class BillingView {
 
     renderInventory(items, billItems = []) {
         console.log('Rendering inventory items:', items);
-        const billItemIds = billItems.map(bi => bi.id);
+        console.log('Bill items:', billItems);
         
-        // Check if we need to re-render the entire grid
-        const currentItems = Array.from(this.inventoryGrid.querySelectorAll('.inventory-item'));
-        const needsFullRender = currentItems.length !== items.length || 
-                                currentItems.some((el, i) => parseInt(el.dataset.id) !== items[i].id);
+        // Ensure billItemIds are numbers for consistent comparison
+        const billItemIds = billItems.map(bi => Number(bi.id));
+        console.log('Bill item IDs:', billItemIds);
         
-        if (needsFullRender) {
-            // Full re-render needed
-            this.inventoryGrid.innerHTML = items.map(item => {
-                const isSelected = billItemIds.includes(item.id);
-                return `
-                    <div class="inventory-item ${isSelected ? 'selected' : ''}" data-id="${item.id}">
-                        <div class="item-name">${item.name}</div>
-                        <div class="item-price">${item.icon} ₹${item.price}</div>
-                    </div>
-                `;
-            }).join('');
-        } else {
-            // Just update selected states
-            currentItems.forEach((el) => {
-                const itemId = parseInt(el.dataset.id);
-                const shouldBeSelected = billItemIds.includes(itemId);
-                
-                if (shouldBeSelected && !el.classList.contains('selected')) {
-                    el.classList.add('selected');
-                } else if (!shouldBeSelected && el.classList.contains('selected')) {
-                    el.classList.remove('selected');
-                }
-            });
-        }
+        // Always do a full re-render to ensure consistency
+        this.inventoryGrid.innerHTML = items.map(item => {
+            const itemId = Number(item.id);
+            const isSelected = billItemIds.includes(itemId);
+            console.log(`Item ${item.name} (ID: ${itemId}): selected = ${isSelected}`);
+            return `
+                <div class="inventory-item ${isSelected ? 'selected' : ''}" data-id="${item.id}">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">${item.icon} ₹${item.price}</div>
+                </div>
+            `;
+        }).join('');
         
         console.log('Inventory grid updated');
     }
