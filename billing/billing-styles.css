@@ -1480,7 +1480,7 @@ body {
 }
 
 .bill-template {
-    border: 2px solid #d4af37;
+    border: none;
 }
 
 .bill-header {
