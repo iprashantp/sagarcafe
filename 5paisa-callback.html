@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5paisa Authentication - StockWolf</title>
+    <!-- Host this file at https://sagarcafe.in/5paisa-callback.html -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0f1419; color: #e6e6e6; margin: 0; padding: 0;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+        }
+        .card {
+            background: #1a2332; padding: 32px 24px; border-radius: 12px;
+            max-width: 400px; width: calc(100% - 32px); text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        .icon { font-size: 56px; }
+        h1 { font-size: 22px; margin: 16px 0 8px; }
+        p { font-size: 15px; line-height: 1.5; margin: 8px 0; color: #9ca3af; }
+        .spinner {
+            border: 4px solid #2a3441; border-top: 4px solid #4ade80;
+            border-radius: 50%; width: 48px; height: 48px;
+            animation: spin 0.8s linear infinite; margin: 16px auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .success h1 { color: #4ade80; }
+        .error h1 { color: #f87171; }
+        .meta {
+            font-size: 13px; color: #6b7280; margin-top: 16px;
+            padding-top: 16px; border-top: 1px solid #2a3441;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="card" id="card">
+        <!-- Loading state (default) -->
+        <div id="loading">
+            <div class="icon">🔄</div>
+            <h1>Completing 5paisa Login…</h1>
+            <div class="spinner"></div>
+            <p>Sending token to StockWolf…</p>
+        </div>
+
+        <!-- Success state -->
+        <div id="success" class="success hidden">
+            <div class="icon">✅</div>
+            <h1>5paisa Login Successful</h1>
+            <p>Your access token has been saved. You will receive a confirmation on Telegram shortly.</p>
+            <p>You can close this tab.</p>
+            <div class="meta" id="expiry-meta"></div>
+        </div>
+
+        <!-- Error state -->
+        <div id="error" class="error hidden">
+            <div class="icon">❌</div>
+            <h1>Login Failed</h1>
+            <p id="error-message">Something went wrong.</p>
+            <p style="margin-top: 16px;">
+                <a href="javascript:location.reload()" style="color: #60a5fa;">Retry</a>
+            </p>
+        </div>
+
+        <!-- No token state -->
+        <div id="no-token" class="error hidden">
+            <div class="icon">⚠️</div>
+            <h1>No RequestToken</h1>
+            <p>5paisa did not provide a RequestToken in the redirect. Please try logging in again from the Telegram link.</p>
+        </div>
+    </div>
+
+    <script>
+        // ---- Configuration ----
+        // Update STOCKCRAB_URL to your Tailscale Funnel hostname.
+        const STOCKCRAB_URL = 'https://stockwolf.tail520268.ts.net';
+        // -----------------------
+
+        function show(id) {
+            ['loading', 'success', 'error', 'no-token'].forEach(function (s) {
+                document.getElementById(s).classList.add('hidden');
+            });
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        (async function () {
+            var params = new URLSearchParams(window.location.search);
+            var requestToken = params.get('RequestToken');
+
+            if (!requestToken) {
+                show('no-token');
+                return;
+            }
+
+            try {
+                var url = STOCKCRAB_URL + '/api/v1/auth/5paisa/callback?RequestToken=' +
+                          encodeURIComponent(requestToken);
+
+                var resp = await fetch(url, { mode: 'cors' });
+
+                if (resp.ok) {
+                    // StockCrab returns HTML for mobile flow; parse for expiry if present.
+                    var text = await resp.text();
+                    var expiryMatch = text.match(/Token expires:\s*([^\s<]+)/);
+                    if (expiryMatch) {
+                        document.getElementById('expiry-meta').textContent = 'Token expires: ' + expiryMatch[1];
+                    }
+                    show('success');
+                } else {
+                    var body;
+                    try { body = await resp.json(); } catch (_) { body = {}; }
+                    document.getElementById('error-message').textContent =
+                        body.detail || ('HTTP ' + resp.status);
+                    show('error');
+                }
+            } catch (e) {
+                document.getElementById('error-message').textContent =
+                    'Network error — is Tailscale Funnel running? (' + e.message + ')';
+                show('error');
+            }
+        })();
+    </script>
+</body>
+</html>
